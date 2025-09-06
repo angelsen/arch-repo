@@ -63,7 +63,7 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
    - Installs with pacman
 
 ### Key Design Principles
-- All packages are built from source on the user's machine (not pre-built binaries)
+- Packages are built locally on the user's machine using makepkg
 - The repository is entirely static, served via GitHub Pages
 - Package metadata is extracted directly from PKGBUILDs
 - The `ap` tool requires no local repository clone - works entirely via HTTPS

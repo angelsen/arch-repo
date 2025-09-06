@@ -1,0 +1,25 @@
+{
+  "search": {
+    "query": null,
+    "projects": null,
+    "filters": {
+      "tool_name": {
+        "in": [
+          "Read",
+          "Write",
+          "Edit",
+          "MultiEdit",
+          "Bash"
+        ]
+      },
+      "file_path": {
+        "like": "/home/fredrik/Projects/Arch/arch-repo%"
+      }
+    },
+    "base_path": null
+  },
+  "metadata": {
+    "last_saved": "2025-09-06T11:28:43.597232",
+    "files_found": 2
+  }
+}

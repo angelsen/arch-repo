@@ -83,4 +83,4 @@ makepkg -si
 
 ## How It Works
 
-The `ap` tool downloads PKGBUILDs and source files from this repository, then builds and installs packages locally using makepkg. Everything is built from source on your machine.
+The `ap` tool downloads PKGBUILDs and source files from this repository, then builds and installs packages locally using makepkg.

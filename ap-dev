@@ -9,8 +9,11 @@ import json
 import argparse
 import subprocess
 import shutil
+import re
 from pathlib import Path
 from typing import Dict, List, Optional
+
+VERSION = "1.0.0"
 
 # Colors for output
 class Colors:
@@ -37,6 +40,14 @@ class ApDev:
         self.repo_root = Path(__file__).parent
         self.pkgbuilds_dir = self.repo_root / "pkgbuilds"
         self.packages_json = self.repo_root / "packages.json"
+        self.git_cmd = "/usr/bin/git"  # Use system git to avoid wrapper issues
+    
+    def run_git(self, args: List[str], cwd: Optional[Path] = None, **kwargs):
+        """Run git command with full path to avoid wrapper issues"""
+        cmd = [self.git_cmd] + args
+        if cwd is None:
+            cwd = self.repo_root
+        return subprocess.run(cmd, cwd=cwd, **kwargs)
         
     def parse_pkgbuild(self, pkgbuild_path: Path) -> Optional[Dict]:
         """Extract package info from PKGBUILD"""
@@ -65,8 +76,8 @@ class ApDev:
             
             # Get list of tracked files in the package directory (excluding PKGBUILD)
             pkg_dir = pkgbuild_path.parent
-            result = subprocess.run(
-                ["git", "ls-files"],
+            result = self.run_git(
+                ["ls-files"],
                 capture_output=True,
                 text=True,
                 cwd=pkg_dir,
@@ -181,15 +192,36 @@ package() {{
             else:
                 warning(f"Failed to parse {pkg_dir.name}/PKGBUILD")
         
+        # Get ap version from the ap script
+        ap_version = "unknown"
+        ap_script = self.repo_root / "ap"
+        if ap_script.exists():
+            try:
+                content = ap_script.read_text()
+                match = re.search(r'^VERSION="([^"]+)"', content, re.MULTILINE)
+                if match:
+                    ap_version = match.group(1)
+            except:
+                pass
+        
         # Backup existing packages.json
         if self.packages_json.exists():
             shutil.copy(self.packages_json, self.packages_json.with_suffix('.json.bak'))
         
-        # Write new packages.json
+        # Write new packages.json with tool versions
+        data = {
+            "packages": packages,
+            "tools": {
+                "ap": ap_version,
+                "ap-dev": VERSION
+            }
+        }
+        
         with open(self.packages_json, 'w') as f:
-            json.dump({"packages": packages}, f, indent=2)
+            json.dump(data, f, indent=2)
         
         success(f"Updated packages.json with {len(packages)} packages")
+        info(f"Tool versions: ap v{ap_version}, ap-dev v{VERSION}")
         return 0
     
     def cmd_publish(self):
@@ -202,12 +234,11 @@ package() {{
         
         # Git add, commit, push
         try:
-            subprocess.run(["git", "add", "-A"], cwd=self.repo_root, check=True)
+            self.run_git(["add", "-A"], check=True)
             
             # Check if there are changes
-            result = subprocess.run(
-                ["git", "diff", "--cached", "--exit-code"],
-                cwd=self.repo_root,
+            result = self.run_git(
+                ["diff", "--cached", "--exit-code"],
                 capture_output=True
             )
             
@@ -216,16 +247,14 @@ package() {{
                 return 0
             
             # Commit
-            subprocess.run(
-                ["git", "commit", "-m", "Update packages"],
-                cwd=self.repo_root,
+            self.run_git(
+                ["commit", "-m", "Update packages"],
                 check=True
             )
             
             # Push
-            subprocess.run(
-                ["git", "push"],
-                cwd=self.repo_root,
+            self.run_git(
+                ["push"],
                 check=True
             )
             

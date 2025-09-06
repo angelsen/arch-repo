@@ -81,7 +81,8 @@
 </head>
 <body>
     <h1>📦 Angelsen's Arch Repository</h1>
-    <p>Custom Arch Linux packages built from source.</p>
+    <p>Custom Arch Linux packages.</p>
+    <p id="tool-versions" style="margin-top: 0.5rem; font-size: 0.9rem; color: #a6adc8;"></p>
 
     <h2>⚡ Quick Setup</h2>
     <pre><code>curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash</code></pre>
@@ -122,10 +123,19 @@ makepkg -si
         // Load packages dynamically from packages.json
         async function loadPackages() {
             const container = document.getElementById('packages-container');
+            const versionsElement = document.getElementById('tool-versions');
             
             try {
                 const response = await fetch('packages.json');
                 const data = await response.json();
+                
+                // Display tool versions if available
+                if (data.tools) {
+                    versionsElement.innerHTML = `
+                        <span>ap v${data.tools.ap || 'unknown'}</span> • 
+                        <span>ap-dev v${data.tools['ap-dev'] || 'unknown'}</span>
+                    `;
+                }
                 
                 if (data.packages && data.packages.length > 0) {
                     container.innerHTML = data.packages.map(pkg => `

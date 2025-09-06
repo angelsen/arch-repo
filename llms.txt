@@ -4,7 +4,7 @@ Custom Arch Linux package repository with the `ap` package manager.
 
 ## Purpose
 
-This repository provides custom-built Arch Linux packages with a lightweight package manager for easy installation. All packages are built from source on the user's machine.
+This repository provides custom Arch Linux packages with a lightweight package manager for easy installation.
 
 ## Tools
 
@@ -68,7 +68,7 @@ This suffix identifies them as custom builds while keeping the main package name
 ## Key Design Decisions
 
 - No binary hosting (avoids GitHub's 100MB limit)
-- Everything built from source on user's machine
+- Packages built locally using makepkg
 - Single source of truth for versions (PKGBUILD only)
 - Auto-generated packages.json from PKGBUILDs
 - Global .gitignore for build artifacts
