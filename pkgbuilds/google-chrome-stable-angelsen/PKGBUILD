@@ -21,8 +21,8 @@ source=("https://dl.google.com/linux/chrome/deb/pool/main/g/${_pkgname}/${_pkgna
     'google-chrome-stable.sh'
     'eula_text.html')
 sha512sums=('c37b05ae25c8184affa52cdf8b1bee4de511bc3c3649a61bc95f963f5ae2ca6207b0dfee7af8ce6deb7ce752e79fb6aaf6c1bfc798b447fd2a5d7060f60a8d88'
-    'a4b8f640d6e18501b5510bbe76ebd94cea39394c2b71dff09673f77d969dbd7a7fa3db379c0fae4d151960cb7c39c982fa6bb5be786ef68216a689f74ab1ecd5'
-    '2501777a50779c922268f2fc0faa663f07f08f73e3d68453fb16c2eabd360d0bc9ca61cf63e6251eff96fa3cccd0717b5f8be9a2419cc4219763600bd054dea3')
+            'de02b498a4b5b93e21622c8dba57befe795d733a04656be911cc38e28bfef0e20470450f44be523bbde8d4de28f79c10434846ca01fc2a2f4e67707b79332f94'
+            '2501777a50779c922268f2fc0faa663f07f08f73e3d68453fb16c2eabd360d0bc9ca61cf63e6251eff96fa3cccd0717b5f8be9a2419cc4219763600bd054dea3')
 
 package() {
     # Extract the data from the deb package

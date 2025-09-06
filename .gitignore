@@ -26,6 +26,9 @@ pkgbuilds/**/*.rpm
 pkgbuilds/**/*.log
 pkgbuilds/**/*.sig
 
+# Generated .SRCINFO files (regenerated on update)
+pkgbuilds/**/.SRCINFO
+
 # Keep PKGBUILD source files
 !pkgbuilds/**/*.sh
 !pkgbuilds/**/*.install

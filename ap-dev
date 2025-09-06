@@ -187,6 +187,20 @@ package() {{
             if pkg_info:
                 packages.append(pkg_info)
                 info(f"Found: {pkg_info['name']} {pkg_info['version']}")
+                
+                # Generate .SRCINFO for each package
+                result = subprocess.run(
+                    ["makepkg", "--printsrcinfo"],
+                    cwd=pkg_dir,
+                    capture_output=True,
+                    text=True
+                )
+                
+                if result.returncode == 0:
+                    srcinfo_path = pkg_dir / ".SRCINFO"
+                    srcinfo_path.write_text(result.stdout)
+                else:
+                    warning(f"Failed to generate .SRCINFO for {pkg_dir.name}")
             else:
                 warning(f"Failed to parse {pkg_dir.name}/PKGBUILD")
 
@@ -299,7 +313,7 @@ package() {{
     def cmd_clean(self):
         """Remove all build artifacts"""
         info("Cleaning build artifacts...")
-        patterns = ["*.pkg.tar.zst", "*.pkg.tar.xz", "*.log", "pkg", "src"]
+        patterns = ["*.pkg.tar.zst", "*.pkg.tar.xz", "*.log", "pkg", "src", "*.bak"]
 
         cleaned = 0
         for pkg_dir in self.pkgbuilds_dir.iterdir():
@@ -335,6 +349,53 @@ package() {{
                     print(f"{pkg_dir.name:<40} {'PARSE ERROR':<15}")
         return 0
 
+    def cmd_updpkgsums(self, package_name: str):
+        """Update checksums in PKGBUILD"""
+        pkg_dir = self.pkgbuilds_dir / package_name
+        
+        if not pkg_dir.exists():
+            error(f"Package '{package_name}' not found!")
+            return 1
+        
+        pkgbuild = pkg_dir / "PKGBUILD"
+        if not pkgbuild.exists():
+            error(f"No PKGBUILD found in {package_name}")
+            return 1
+        
+        info(f"Updating checksums for {package_name}...")
+        
+        # Run updpkgsums
+        result = subprocess.run(
+            ["updpkgsums"],
+            cwd=pkg_dir,
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode == 0:
+            success(f"Updated checksums for {package_name}")
+            
+            # Generate .SRCINFO too
+            info("Generating .SRCINFO...")
+            result = subprocess.run(
+                ["makepkg", "--printsrcinfo"],
+                cwd=pkg_dir,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode == 0:
+                srcinfo_path = pkg_dir / ".SRCINFO"
+                srcinfo_path.write_text(result.stdout)
+                success("Generated .SRCINFO")
+            else:
+                warning("Failed to generate .SRCINFO")
+        else:
+            error(f"Failed to update checksums: {result.stderr}")
+            return 1
+        
+        return 0
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -368,6 +429,10 @@ def main():
 
     # list command
     subparsers.add_parser("list", help="List all packages")
+    
+    # updpkgsums command
+    updpkgsums_parser = subparsers.add_parser("updpkgsums", help="Update checksums in PKGBUILD")
+    updpkgsums_parser.add_argument("package", help="Package name")
 
     args = parser.parse_args()
 
@@ -391,6 +456,8 @@ def main():
         return ap_dev.cmd_clean()
     elif args.command == "list":
         return ap_dev.cmd_list()
+    elif args.command == "updpkgsums":
+        return ap_dev.cmd_updpkgsums(args.package)
     else:
         parser.print_help()
         return 1
