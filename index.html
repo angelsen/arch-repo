@@ -5,18 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Angelsen's Arch Repository</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         html {
             height: 100%;
+            background: #1e1e2e;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin: 0;
+            padding: 2rem 3rem;
             background: #1e1e2e;
             color: #cdd6f4;
             min-height: 100vh;
-            box-sizing: border-box;
+            max-width: 900px;
         }
         h1 { color: #89b4fa; }
         h2 { color: #94e2d5; margin-top: 2rem; }
@@ -56,11 +61,10 @@
     <pre><code>curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash</code></pre>
 
     <h2>📋 Available Packages</h2>
-    <div class="package">
-        <h3>google-chrome-stable-angelsen</h3>
-        <p>Google Chrome (Stable) with debug wrapper for development</p>
-        <p>Version: 140.0.7339.80-1</p>
-        <pre class="install-cmd">ap install google-chrome-stable-angelsen</pre>
+    <div id="packages-container">
+        <div class="package">
+            <p>Loading packages...</p>
+        </div>
     </div>
 
     <h2>🔧 Usage</h2>
@@ -85,5 +89,37 @@ makepkg -si
         <li><a href="https://github.com/angelsen/arch-repo">GitHub Repository</a></li>
         <li><a href="packages.json">Package List (JSON)</a></li>
     </ul>
+
+    <script>
+        // Load packages dynamically from packages.json
+        async function loadPackages() {
+            const container = document.getElementById('packages-container');
+            
+            try {
+                const response = await fetch('packages.json');
+                const data = await response.json();
+                
+                if (data.packages && data.packages.length > 0) {
+                    container.innerHTML = data.packages.map(pkg => `
+                        <div class="package">
+                            <h3>${pkg.name}</h3>
+                            <p>${pkg.description}</p>
+                            <p>Version: ${pkg.version}</p>
+                            ${pkg.url ? `<p><a href="${pkg.url}" target="_blank">Homepage ↗</a></p>` : ''}
+                            <pre class="install-cmd">ap install ${pkg.name}</pre>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div class="package"><p>No packages available yet.</p></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load packages:', error);
+                container.innerHTML = '<div class="package"><p>Failed to load packages. Please try again later.</p></div>';
+            }
+        }
+        
+        // Load packages when page loads
+        document.addEventListener('DOMContentLoaded', loadPackages);
+    </script>
 </body>
 </html>
