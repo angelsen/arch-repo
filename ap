@@ -1,0 +1,139 @@
+#!/bin/bash
+# ap - Angelsen's Package manager
+# Lightweight AUR-like helper for custom packages
+
+REPO="https://angelsen.github.io/arch-repo"
+VERSION="1.0.0"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+install() {
+    local package="$1"
+    if [[ -z "$package" ]]; then
+        echo -e "${RED}Error:${NC} Package name required"
+        echo "Usage: ap install <package-name>"
+        exit 1
+    fi
+    
+    echo -e "${BLUE}📦 Installing${NC} $package..."
+    
+    # Create temp directory
+    tmpdir=$(mktemp -d)
+    trap "rm -rf $tmpdir" EXIT
+    cd "$tmpdir"
+    
+    # Download PKGBUILD
+    if ! curl -fsL "$REPO/pkgbuilds/$package/PKGBUILD" -o PKGBUILD; then
+        echo -e "${RED}Error:${NC} Package '$package' not found!"
+        exit 1
+    fi
+    
+    # Parse and download source files (excluding URLs)
+    echo -e "${BLUE}→${NC} Downloading source files..."
+    for file in $(grep "^source=" PKGBUILD | sed "s/source=(//" | tr -d ')"' | tr "'" '\n' | tr ' ' '\n' | grep -v "://"); do
+        [[ -z "$file" ]] && continue
+        echo -e "  ${BLUE}↓${NC} $file"
+        curl -fsL "$REPO/pkgbuilds/$package/$file" -o "$file" || echo -e "  ${YELLOW}⚠${NC} Skipping $file (external source)"
+    done
+    
+    # Check for .install file
+    install_file=$(grep "^install=" PKGBUILD | cut -d'=' -f2 | tr -d '"')
+    if [[ -n "$install_file" ]]; then
+        echo -e "  ${BLUE}↓${NC} $install_file"
+        curl -fsL "$REPO/pkgbuilds/$package/$install_file" -o "$install_file"
+    fi
+    
+    # Build and install
+    echo -e "${BLUE}→${NC} Building package..."
+    makepkg -si
+    
+    echo -e "${GREEN}✓${NC} Installation complete!"
+}
+
+list() {
+    echo -e "${BLUE}📋 Available packages:${NC}"
+    curl -s "$REPO/packages.json" 2>/dev/null | jq -r '.packages[].name' 2>/dev/null || {
+        # Fallback if packages.json doesn't exist yet
+        echo "  • google-chrome-stable-angelsen"
+    }
+}
+
+search() {
+    local query="$1"
+    if [[ -z "$query" ]]; then
+        list
+        return
+    fi
+    
+    echo -e "${BLUE}🔍 Searching for '${query}'...${NC}"
+    curl -s "$REPO/packages.json" 2>/dev/null | jq -r ".packages[] | select(.name | contains(\"$query\")) | .name" 2>/dev/null || {
+        # Fallback search
+        if [[ "google-chrome-stable-angelsen" == *"$query"* ]]; then
+            echo "  • google-chrome-stable-angelsen"
+        else
+            echo -e "${YELLOW}No packages found${NC}"
+        fi
+    }
+}
+
+update() {
+    echo -e "${BLUE}🔄 Updating ap...${NC}"
+    
+    # Download new version
+    if curl -fsL "$REPO/ap" -o /tmp/ap.new; then
+        chmod +x /tmp/ap.new
+        sudo mv /tmp/ap.new /usr/local/bin/ap
+        echo -e "${GREEN}✓${NC} Updated successfully!"
+    else
+        echo -e "${RED}Error:${NC} Failed to download update"
+        exit 1
+    fi
+}
+
+version() {
+    echo "ap version $VERSION"
+    echo "Repository: $REPO"
+}
+
+help() {
+    cat << EOF
+ap - Angelsen's Package manager v$VERSION
+
+Usage: ap <command> [options]
+
+Commands:
+  install <package>  Install a package
+  list              List available packages
+  search <query>    Search for packages
+  update            Update ap itself
+  version           Show version info
+  help              Show this help
+
+Examples:
+  ap install google-chrome-stable-angelsen
+  ap search chrome
+  ap update
+
+Repository: $REPO
+EOF
+}
+
+# Main
+case "$1" in
+    install|i) install "$2" ;;
+    list|l) list ;;
+    search|s) search "$2" ;;
+    update|u) update ;;
+    version|v) version ;;
+    help|h|"") help ;;
+    *) 
+        echo -e "${RED}Unknown command:${NC} $1"
+        echo "Try 'ap help' for usage"
+        exit 1
+        ;;
+esac

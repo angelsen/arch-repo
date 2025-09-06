@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angelsen's Arch Repository</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #1e1e2e;
+            color: #cdd6f4;
+        }
+        h1 { color: #89b4fa; }
+        h2 { color: #94e2d5; margin-top: 2rem; }
+        pre {
+            background: #181825;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #313244;
+        }
+        code {
+            background: #181825;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #f38ba8;
+        }
+        .package {
+            background: #181825;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #313244;
+        }
+        .package h3 { 
+            margin-top: 0; 
+            color: #a6e3a1;
+        }
+        a { color: #89b4fa; }
+        .install-cmd { color: #a6e3a1; }
+    </style>
+</head>
+<body>
+    <h1>📦 Angelsen's Arch Repository</h1>
+    <p>Custom Arch Linux packages built from source.</p>
+
+    <h2>⚡ Quick Setup</h2>
+    <pre><code>curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash</code></pre>
+
+    <h2>📋 Available Packages</h2>
+    <div class="package">
+        <h3>google-chrome-stable-angelsen</h3>
+        <p>Google Chrome (Stable) with debug wrapper for development</p>
+        <p>Version: 140.0.7339.80-1</p>
+        <pre class="install-cmd">ap install google-chrome-stable-angelsen</pre>
+    </div>
+
+    <h2>🔧 Usage</h2>
+    <pre>
+ap list                   # List available packages
+ap search chrome          # Search for packages
+ap install &lt;package&gt;      # Install a package
+ap update                 # Update ap itself
+ap help                   # Show help
+    </pre>
+
+    <h2>📚 Manual Installation</h2>
+    <p>If you prefer to build manually:</p>
+    <pre>
+git clone https://github.com/angelsen/arch-repo.git
+cd arch-repo/pkgbuilds/google-chrome-stable-angelsen
+makepkg -si
+    </pre>
+
+    <h2>🔗 Links</h2>
+    <ul>
+        <li><a href="https://github.com/angelsen/arch-repo">GitHub Repository</a></li>
+        <li><a href="packages.json">Package List (JSON)</a></li>
+    </ul>
+</body>
+</html>
