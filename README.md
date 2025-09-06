@@ -1,6 +1,6 @@
 # Angelsen's Arch Repository
 
-Custom Arch Linux packages built from source using `ap` (Angelsen's Package manager).
+Custom Arch Linux packages with `ap` package manager.
 
 ## Quick Setup
 
@@ -10,27 +10,65 @@ curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash
 
 ## Usage
 
+### For Users (ap)
+
 ```bash
 ap list                   # List available packages
 ap search chrome          # Search for packages  
 ap install google-chrome-stable-angelsen  # Install a package
 ap update                 # Update ap itself
+ap help                   # Show help
+```
+
+### For Maintainers (ap-dev)
+
+```bash
+ap-dev new <package>      # Create new package from template
+ap-dev test [package]     # Build package locally
+ap-dev list               # List all packages with versions
+ap-dev check              # Validate all PKGBUILDs
+ap-dev update             # Regenerate packages.json from PKGBUILDs
+ap-dev publish            # Update packages.json, commit and push
+ap-dev clean              # Remove all build artifacts
 ```
 
 ## Available Packages
 
-- **google-chrome-stable-angelsen** - Google Chrome (Stable) with debug wrapper
+See [packages.json](packages.json) or visit https://angelsen.github.io/arch-repo/
 
-## Structure
+Current packages are automatically listed on the website and updated when new packages are added.
+
+## Development
+
+### Adding a New Package
+
+```bash
+# Create package template
+./ap-dev new my-package-name
+
+# Edit the PKGBUILD
+cd pkgbuilds/my-package-name
+vim PKGBUILD
+
+# Test build locally
+ap-dev test
+
+# Publish to repository
+ap-dev publish
+```
+
+### Repository Structure
 
 ```
 arch-repo/
-├── ap                    # Package manager tool
+├── ap                    # User package manager (bash)
+├── ap-dev               # Developer tool (python)
 ├── setup.sh             # Installation script
-├── packages.json        # Package metadata
-├── index.html           # GitHub Pages site
-└── pkgbuilds/           # Package build scripts
-    └── google-chrome-stable-angelsen/
+├── packages.json        # Auto-generated package list
+├── index.html           # GitHub Pages website
+├── .gitignore           # Ignores build artifacts
+└── pkgbuilds/           # Package sources
+    └── package-name/
         ├── PKGBUILD
         └── (source files)
 ```
@@ -43,12 +81,6 @@ cd arch-repo/pkgbuilds/google-chrome-stable-angelsen
 makepkg -si
 ```
 
-## Adding to Your System
+## How It Works
 
-The `ap` tool is a lightweight AUR-like helper that:
-- Downloads PKGBUILDs from this repository
-- Fetches required source files
-- Builds and installs packages using makepkg
-- Self-updates when needed
-
-No binary hosting required - everything builds from source!
+The `ap` tool downloads PKGBUILDs and source files from this repository, then builds and installs packages locally using makepkg. Everything is built from source on your machine.
