@@ -1,0 +1,365 @@
+#!/usr/bin/env python3
+"""
+ap-dev - Development tool for managing Angelsen's Arch Repository
+"""
+
+import os
+import sys
+import json
+import argparse
+import subprocess
+import shutil
+from pathlib import Path
+from typing import Dict, List, Optional
+
+# Colors for output
+class Colors:
+    RED = '\033[0;31m'
+    GREEN = '\033[0;32m'
+    BLUE = '\033[0;34m'
+    YELLOW = '\033[1;33m'
+    NC = '\033[0m'  # No Color
+
+def info(msg: str):
+    print(f"{Colors.BLUE}→{Colors.NC} {msg}")
+
+def success(msg: str):
+    print(f"{Colors.GREEN}✓{Colors.NC} {msg}")
+
+def error(msg: str):
+    print(f"{Colors.RED}✗{Colors.NC} {msg}", file=sys.stderr)
+
+def warning(msg: str):
+    print(f"{Colors.YELLOW}⚠{Colors.NC} {msg}")
+
+class ApDev:
+    def __init__(self):
+        self.repo_root = Path(__file__).parent
+        self.pkgbuilds_dir = self.repo_root / "pkgbuilds"
+        self.packages_json = self.repo_root / "packages.json"
+        
+    def parse_pkgbuild(self, pkgbuild_path: Path) -> Optional[Dict]:
+        """Extract package info from PKGBUILD"""
+        if not pkgbuild_path.exists():
+            return None
+            
+        try:
+            # Source the PKGBUILD and extract variables
+            cmd = f'''
+                source "{pkgbuild_path}" 2>/dev/null
+                echo "${{pkgname}}|${{pkgver}}|${{pkgrel}}|${{pkgdesc}}|${{url}}"
+            '''
+            result = subprocess.run(
+                ["bash", "-c", cmd],
+                capture_output=True,
+                text=True,
+                cwd=pkgbuild_path.parent
+            )
+            
+            if result.returncode != 0:
+                return None
+                
+            parts = result.stdout.strip().split('|')
+            if len(parts) < 4:
+                return None
+                
+            return {
+                "name": parts[0],
+                "version": f"{parts[1]}-{parts[2]}",
+                "description": parts[3],
+                "url": parts[4] if len(parts) > 4 else ""
+            }
+        except Exception as e:
+            error(f"Failed to parse {pkgbuild_path}: {e}")
+            return None
+    
+    def cmd_new(self, package_name: str):
+        """Create a new package from template"""
+        pkg_dir = self.pkgbuilds_dir / package_name
+        
+        if pkg_dir.exists():
+            error(f"Package '{package_name}' already exists!")
+            return 1
+            
+        info(f"Creating new package: {package_name}")
+        pkg_dir.mkdir(parents=True)
+        
+        # Create template PKGBUILD
+        pkgbuild_template = f'''# Maintainer: Your Name <your.email@example.com>
+
+pkgname={package_name}
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Description of {package_name}"
+arch=('x86_64')
+url="https://example.com"
+license=('GPL')
+depends=()
+makedepends=()
+source=()
+sha256sums=()
+
+package() {{
+    # Installation commands here
+    :
+}}
+'''
+        
+        (pkg_dir / "PKGBUILD").write_text(pkgbuild_template)
+        success(f"Created package template at {pkg_dir}")
+        info("Edit the PKGBUILD and run 'ap-dev test' to build locally")
+        return 0
+    
+    def cmd_test(self, package_name: Optional[str] = None):
+        """Test build a package locally"""
+        if package_name:
+            pkg_dirs = [self.pkgbuilds_dir / package_name]
+        else:
+            # Find package in current directory
+            if (Path.cwd() / "PKGBUILD").exists():
+                pkg_dirs = [Path.cwd()]
+            else:
+                error("No PKGBUILD found in current directory")
+                return 1
+        
+        for pkg_dir in pkg_dirs:
+            if not pkg_dir.exists():
+                error(f"Package directory not found: {pkg_dir}")
+                continue
+                
+            info(f"Building package in {pkg_dir}")
+            result = subprocess.run(
+                ["makepkg", "-sf"],
+                cwd=pkg_dir
+            )
+            
+            if result.returncode == 0:
+                success(f"Package built successfully")
+                # List built packages
+                for pkg_file in pkg_dir.glob("*.pkg.tar.zst"):
+                    info(f"Built: {pkg_file.name}")
+            else:
+                error(f"Build failed")
+                return 1
+        
+        return 0
+    
+    def cmd_update(self):
+        """Update packages.json from all PKGBUILDs"""
+        info("Scanning for packages...")
+        packages = []
+        
+        for pkg_dir in sorted(self.pkgbuilds_dir.iterdir()):
+            if not pkg_dir.is_dir():
+                continue
+                
+            pkgbuild = pkg_dir / "PKGBUILD"
+            if not pkgbuild.exists():
+                warning(f"No PKGBUILD in {pkg_dir.name}, skipping")
+                continue
+            
+            pkg_info = self.parse_pkgbuild(pkgbuild)
+            if pkg_info:
+                packages.append(pkg_info)
+                info(f"Found: {pkg_info['name']} {pkg_info['version']}")
+            else:
+                warning(f"Failed to parse {pkg_dir.name}/PKGBUILD")
+        
+        # Backup existing packages.json
+        if self.packages_json.exists():
+            shutil.copy(self.packages_json, self.packages_json.with_suffix('.json.bak'))
+        
+        # Write new packages.json
+        with open(self.packages_json, 'w') as f:
+            json.dump({"packages": packages}, f, indent=2)
+        
+        success(f"Updated packages.json with {len(packages)} packages")
+        return 0
+    
+    def cmd_publish(self):
+        """Update packages.json, commit, and push"""
+        info("Publishing repository...")
+        
+        # First update packages.json
+        if self.cmd_update() != 0:
+            return 1
+        
+        # Git add, commit, push
+        try:
+            subprocess.run(["git", "add", "-A"], cwd=self.repo_root, check=True)
+            
+            # Check if there are changes
+            result = subprocess.run(
+                ["git", "diff", "--cached", "--exit-code"],
+                cwd=self.repo_root,
+                capture_output=True
+            )
+            
+            if result.returncode == 0:
+                info("No changes to publish")
+                return 0
+            
+            # Commit
+            subprocess.run(
+                ["git", "commit", "-m", "Update packages"],
+                cwd=self.repo_root,
+                check=True
+            )
+            
+            # Push
+            subprocess.run(
+                ["git", "push"],
+                cwd=self.repo_root,
+                check=True
+            )
+            
+            success("Published successfully!")
+            info("Changes will be live at https://angelsen.github.io/arch-repo/ in a few minutes")
+            
+        except subprocess.CalledProcessError as e:
+            error(f"Git operation failed: {e}")
+            return 1
+        
+        return 0
+    
+    def cmd_check(self):
+        """Validate all PKGBUILDs"""
+        info("Checking all packages...")
+        errors = 0
+        
+        for pkg_dir in sorted(self.pkgbuilds_dir.iterdir()):
+            if not pkg_dir.is_dir():
+                continue
+                
+            pkgbuild = pkg_dir / "PKGBUILD"
+            if not pkgbuild.exists():
+                warning(f"{pkg_dir.name}: No PKGBUILD found")
+                errors += 1
+                continue
+            
+            # Try to parse it
+            pkg_info = self.parse_pkgbuild(pkgbuild)
+            if not pkg_info:
+                error(f"{pkg_dir.name}: Failed to parse PKGBUILD")
+                errors += 1
+                continue
+            
+            # Check for required fields
+            if not pkg_info.get('name'):
+                error(f"{pkg_dir.name}: Missing pkgname")
+                errors += 1
+            if not pkg_info.get('version'):
+                error(f"{pkg_dir.name}: Missing version")
+                errors += 1
+            if not pkg_info.get('description'):
+                warning(f"{pkg_dir.name}: Missing description")
+            
+            if errors == 0:
+                success(f"{pkg_dir.name}: OK")
+        
+        if errors > 0:
+            error(f"Found {errors} errors")
+            return 1
+        else:
+            success("All packages OK")
+            return 0
+    
+    def cmd_clean(self):
+        """Remove all build artifacts"""
+        info("Cleaning build artifacts...")
+        patterns = [
+            "*.pkg.tar.zst",
+            "*.pkg.tar.xz", 
+            "*.log",
+            "pkg",
+            "src"
+        ]
+        
+        cleaned = 0
+        for pkg_dir in self.pkgbuilds_dir.iterdir():
+            if not pkg_dir.is_dir():
+                continue
+                
+            for pattern in patterns:
+                for item in pkg_dir.glob(pattern):
+                    if item.is_dir():
+                        shutil.rmtree(item)
+                        info(f"Removed directory: {item}")
+                    else:
+                        item.unlink()
+                        info(f"Removed file: {item}")
+                    cleaned += 1
+        
+        success(f"Cleaned {cleaned} items")
+        return 0
+    
+    def cmd_list(self):
+        """List all packages"""
+        packages = []
+        for pkg_dir in sorted(self.pkgbuilds_dir.iterdir()):
+            if not pkg_dir.is_dir():
+                continue
+            pkgbuild = pkg_dir / "PKGBUILD"
+            if pkgbuild.exists():
+                pkg_info = self.parse_pkgbuild(pkgbuild)
+                if pkg_info:
+                    print(f"{pkg_info['name']:<40} {pkg_info['version']:<15} {pkg_info['description'][:50]}")
+                else:
+                    print(f"{pkg_dir.name:<40} {'PARSE ERROR':<15}")
+        return 0
+
+def main():
+    parser = argparse.ArgumentParser(description='ap-dev - Arch package repository development tool')
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+    
+    # new command
+    new_parser = subparsers.add_parser('new', help='Create new package from template')
+    new_parser.add_argument('package', help='Package name')
+    
+    # test command
+    test_parser = subparsers.add_parser('test', help='Build package locally')
+    test_parser.add_argument('package', nargs='?', help='Package name (optional, uses current dir if not specified)')
+    
+    # update command
+    subparsers.add_parser('update', help='Update packages.json from PKGBUILDs')
+    
+    # publish command
+    subparsers.add_parser('publish', help='Update, commit and push changes')
+    
+    # check command
+    subparsers.add_parser('check', help='Validate all PKGBUILDs')
+    
+    # clean command
+    subparsers.add_parser('clean', help='Remove all build artifacts')
+    
+    # list command
+    subparsers.add_parser('list', help='List all packages')
+    
+    args = parser.parse_args()
+    
+    if not args.command:
+        parser.print_help()
+        return 1
+    
+    ap_dev = ApDev()
+    
+    if args.command == 'new':
+        return ap_dev.cmd_new(args.package)
+    elif args.command == 'test':
+        return ap_dev.cmd_test(args.package)
+    elif args.command == 'update':
+        return ap_dev.cmd_update()
+    elif args.command == 'publish':
+        return ap_dev.cmd_publish()
+    elif args.command == 'check':
+        return ap_dev.cmd_check()
+    elif args.command == 'clean':
+        return ap_dev.cmd_clean()
+    elif args.command == 'list':
+        return ap_dev.cmd_list()
+    else:
+        parser.print_help()
+        return 1
+
+if __name__ == '__main__':
+    sys.exit(main())

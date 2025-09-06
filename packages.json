@@ -3,7 +3,7 @@
     {
       "name": "google-chrome-stable-angelsen",
       "version": "140.0.7339.80-1",
-      "description": "Google Chrome (Stable Channel) with debug wrapper",
+      "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome"
     }
   ]

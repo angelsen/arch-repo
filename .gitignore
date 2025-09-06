@@ -1,0 +1,35 @@
+# Temporary files
+*.tmp
+*.log
+*.swp
+*~
+
+# Auto-generated backups
+packages.json.bak
+
+# Build artifacts in any package directory
+pkgbuilds/**/*.pkg.tar.zst
+pkgbuilds/**/*.pkg.tar.xz
+pkgbuilds/**/pkg/
+pkgbuilds/**/src/
+
+# Downloaded sources in package directories
+pkgbuilds/**/*.deb
+pkgbuilds/**/*.tar.gz
+pkgbuilds/**/*.tar.xz
+pkgbuilds/**/*.tar.bz2
+pkgbuilds/**/*.zip
+pkgbuilds/**/*.AppImage
+pkgbuilds/**/*.rpm
+
+# Makepkg files
+pkgbuilds/**/*.log
+pkgbuilds/**/*.sig
+
+# Keep PKGBUILD source files
+!pkgbuilds/**/*.sh
+!pkgbuilds/**/*.install
+!pkgbuilds/**/*.patch
+!pkgbuilds/**/*.html
+!pkgbuilds/**/*.desktop
+!pkgbuilds/**/*.service
