@@ -1,6 +1,12 @@
 {
   "packages": [
     {
+      "name": "claude-code-angelsen",
+      "version": "1.0.90-1",
+      "description": "An agentic coding tool by Anthropic that lives in your terminal",
+      "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview"
+    },
+    {
       "name": "google-chrome-stable-angelsen",
       "version": "140.0.7339.80-1",
       "description": "Web browser from Google (Stable Channel)",

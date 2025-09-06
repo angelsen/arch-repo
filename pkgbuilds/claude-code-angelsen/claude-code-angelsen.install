@@ -1,0 +1,16 @@
+post_install() {
+  echo "Claude Code has been installed."
+  echo ""
+  echo "NOTE: Claude Code requires an Anthropic account with approved access to the beta."
+  echo "If you don't have access yet, join the waitlist at https://console.anthropic.com/code/welcome"
+  echo ""
+  echo "To get started:"
+  echo "  1. Navigate to your project directory: cd your-project-directory"
+  echo "  2. Run claude: claude"
+  echo "  3. Complete the one-time OAuth authentication with your Anthropic account"
+}
+
+post_upgrade() {
+  echo "Claude Code has been upgraded."
+  echo "To use the new version, simply run 'claude' in your terminal."
+}

@@ -1,0 +1,64 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=claude-code-angelsen
+_pkgname=@anthropic-ai/claude-code
+pkgver=1.0.90
+pkgrel=1
+provides=('claude-code')
+conflicts=('claude-code')
+pkgdesc="An agentic coding tool by Anthropic that lives in your terminal"
+arch=('x86_64')
+url="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview"
+license=('custom:Anthropic')
+depends=('nodejs>=18')
+makedepends=('npm' 'jq')
+optdepends=(
+  'git>=2.23: For git operations'
+  'github-cli: For PR workflows with GitHub'
+  'gitlab-cli: For PR workflows with GitLab'
+  'ripgrep: For enhanced file search capabilities (fallback to bundled version if not available)'
+)
+install="${pkgname}.install"
+source=("$(npm view "${_pkgname}@${pkgver}" dist.tarball)")
+noextract=("$(basename "$(npm view "${_pkgname}@${pkgver}" dist.tarball)")")
+sha256sums=('ca94bb4d5d1e3aaccb010333db3f0a1d1cc8d4e702bf86a2e6049e9ccd91a127')
+
+prepare() {
+  # Ensure reproducible builds
+  export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-$(date +%s)}
+}
+
+package() {
+  # Create temporary npm cache directory
+  local npm_cache="${srcdir}/npm-cache"
+  mkdir -p "${npm_cache}"
+
+  # Install the package globally
+  npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
+    "${srcdir}/$(basename "$(npm view "${_pkgname}@${pkgver}" dist.tarball)")"
+
+  # Remove npm cache
+  rm -rf "${npm_cache}"
+
+  # Fix package.json references to $pkgdir
+  find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
+
+  # Remove references from main package.json using jq
+  local pkgjson="${pkgdir}/usr/lib/node_modules/${_pkgname}/package.json"
+  if [ -f "${pkgjson}" ]; then
+    local tmppackage="$(mktemp)"
+    jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+    mv "${tmppackage}" "${pkgjson}"
+    chmod 644 "${pkgjson}"
+  fi
+
+  # Remove non-x86_64 architecture binaries
+  rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/arm64-linux"
+  rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/arm64-darwin"
+  rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/x64-darwin"
+  rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/x64-win32"
+
+  # Install the license file
+  install -Dm644 "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE.md" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
