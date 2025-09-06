@@ -40,17 +40,43 @@
         }
         .package {
             background: #181825;
-            padding: 1rem;
-            margin: 1rem 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             border-radius: 8px;
             border: 1px solid #313244;
         }
         .package h3 { 
-            margin-top: 0; 
+            margin: 0 0 0.75rem 0; 
             color: #a6e3a1;
+            font-size: 1.3rem;
+        }
+        .package p {
+            margin: 0.5rem 0;
+            line-height: 1.5;
+        }
+        .package pre {
+            margin-top: 1rem;
         }
         a { color: #89b4fa; }
         .install-cmd { color: #a6e3a1; }
+        .links-section {
+            background: #181825;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            border: 1px solid #313244;
+        }
+        .links-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .links-section li {
+            padding: 0.5rem 0;
+        }
+        .links-section li:not(:last-child) {
+            border-bottom: 1px solid #313244;
+        }
     </style>
 </head>
 <body>
@@ -85,10 +111,12 @@ makepkg -si
     </pre>
 
     <h2>🔗 Links</h2>
-    <ul>
-        <li><a href="https://github.com/angelsen/arch-repo">GitHub Repository</a></li>
-        <li><a href="packages.json">Package List (JSON)</a></li>
-    </ul>
+    <div class="links-section">
+        <ul>
+            <li><a href="https://github.com/angelsen/arch-repo">GitHub Repository</a></li>
+            <li><a href="packages.json">Package List (JSON)</a></li>
+        </ul>
+    </div>
 
     <script>
         // Load packages dynamically from packages.json
