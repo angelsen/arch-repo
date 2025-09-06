@@ -3,7 +3,7 @@
 # Lightweight AUR-like helper for custom packages
 
 REPO="https://angelsen.github.io/arch-repo"
-VERSION="1.0.0"
+VERSION="1.1.0"
 
 # Colors
 RED='\033[0;31m'
@@ -87,13 +87,28 @@ search() {
 }
 
 update() {
-    echo -e "${BLUE}🔄 Updating ap...${NC}"
+    echo -e "${BLUE}🔄 Checking for updates...${NC}"
+    
+    # Get remote version
+    remote_version=$(curl -s "$REPO/ap" | grep "^VERSION=" | cut -d'"' -f2)
+    
+    if [[ -z "$remote_version" ]]; then
+        echo -e "${RED}Error:${NC} Could not fetch remote version"
+        exit 1
+    fi
+    
+    if [[ "$remote_version" == "$VERSION" ]]; then
+        echo -e "${GREEN}✓${NC} Already up to date (v$VERSION)"
+        return 0
+    fi
+    
+    echo -e "${YELLOW}→${NC} Updating from v$VERSION to v$remote_version"
     
     # Download new version
     if curl -fsL "$REPO/ap" -o /tmp/ap.new; then
         chmod +x /tmp/ap.new
         sudo mv /tmp/ap.new /usr/local/bin/ap
-        echo -e "${GREEN}✓${NC} Updated successfully!"
+        echo -e "${GREEN}✓${NC} Updated successfully to v$remote_version!"
     else
         echo -e "${RED}Error:${NC} Failed to download update"
         exit 1
@@ -103,6 +118,21 @@ update() {
 version() {
     echo "ap version $VERSION"
     echo "Repository: $REPO"
+    
+    # Check for updates
+    echo -e "\n${BLUE}Checking for updates...${NC}"
+    remote_version=$(curl -s "$REPO/ap" 2>/dev/null | grep "^VERSION=" | cut -d'"' -f2)
+    
+    if [[ -n "$remote_version" ]]; then
+        if [[ "$remote_version" != "$VERSION" ]]; then
+            echo -e "${YELLOW}→ Update available:${NC} v$remote_version"
+            echo -e "  Run 'ap update' to upgrade"
+        else
+            echo -e "${GREEN}✓${NC} You're on the latest version"
+        fi
+    else
+        echo -e "${YELLOW}⚠${NC} Could not check for updates"
+    fi
 }
 
 help() {
