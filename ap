@@ -42,10 +42,11 @@ install() {
     done
     
     # Check for .install file
-    install_file=$(grep "^install=" PKGBUILD | cut -d'=' -f2 | tr -d '"')
-    if [[ -n "$install_file" ]]; then
-        echo -e "  ${BLUE}↓${NC} $install_file"
-        curl -fsL "$REPO/pkgbuilds/$package/$install_file" -o "$install_file"
+    # Source PKGBUILD to get variables
+    source PKGBUILD
+    if [[ -n "$install" ]]; then
+        echo -e "  ${BLUE}↓${NC} $install"
+        curl -fsL "$REPO/pkgbuilds/$package/$install" -o "$install"
     fi
     
     # Build and install
