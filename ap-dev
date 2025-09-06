@@ -62,12 +62,28 @@ class ApDev:
             parts = result.stdout.strip().split('|')
             if len(parts) < 4:
                 return None
+            
+            # Get list of tracked files in the package directory (excluding PKGBUILD)
+            pkg_dir = pkgbuild_path.parent
+            result = subprocess.run(
+                ["git", "ls-files"],
+                capture_output=True,
+                text=True,
+                cwd=pkg_dir,
+                check=True
+            )
+            files = []
+            for file in result.stdout.strip().split('\n'):
+                if file and file != "PKGBUILD":
+                    files.append(file)
+            files.sort()
                 
             return {
                 "name": parts[0],
                 "version": f"{parts[1]}-{parts[2]}",
                 "description": parts[3],
-                "url": parts[4] if len(parts) > 4 else ""
+                "url": parts[4] if len(parts) > 4 else "",
+                "files": files
             }
         except Exception as e:
             error(f"Failed to parse {pkgbuild_path}: {e}")

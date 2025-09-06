@@ -33,21 +33,25 @@ install() {
         exit 1
     fi
     
-    # Parse and download source files (excluding URLs)
-    echo -e "${BLUE}→${NC} Downloading source files..."
-    for file in $(grep "^source=" PKGBUILD | sed "s/source=(//" | tr -d ')"' | tr "'" '\n' | tr ' ' '\n' | grep -v "://"); do
-        [[ -z "$file" ]] && continue
-        echo -e "  ${BLUE}↓${NC} $file"
-        curl -fsL "$REPO/pkgbuilds/$package/$file" -o "$file" || echo -e "  ${YELLOW}⚠${NC} Skipping $file (external source)"
-    done
+    # Download package files from packages.json
+    echo -e "${BLUE}→${NC} Downloading package files..."
     
-    # Check for .install file
-    # Source PKGBUILD to get variables
-    source PKGBUILD
-    if [[ -n "$install" ]]; then
-        echo -e "  ${BLUE}↓${NC} $install"
-        curl -fsL "$REPO/pkgbuilds/$package/$install" -o "$install"
+    # Get file list from packages.json (required)
+    files=$(curl -s "$REPO/packages.json" 2>/dev/null | jq -r ".packages[] | select(.name == \"$package\") | .files[]?" 2>/dev/null)
+    
+    if [[ -z "$files" ]]; then
+        echo -e "${RED}Error:${NC} Package files not found in packages.json. Repository may need updating."
+        exit 1
     fi
+    
+    # Download each file
+    for file in $files; do
+        echo -e "  ${BLUE}↓${NC} $file"
+        if ! curl -fsL "$REPO/pkgbuilds/$package/$file" -o "$file"; then
+            echo -e "${RED}Error:${NC} Failed to download $file"
+            exit 1
+        fi
+    done
     
     # Build and install
     echo -e "${BLUE}→${NC} Building package..."
