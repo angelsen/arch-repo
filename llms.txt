@@ -1,0 +1,93 @@
+# Angelsen's Arch Repository
+
+Custom Arch Linux package repository with the `ap` package manager.
+
+## Purpose
+
+This repository provides custom-built Arch Linux packages with a lightweight package manager for easy installation. All packages are built from source on the user's machine.
+
+## Tools
+
+### ap (User Package Manager)
+- Written in Bash
+- Downloads PKGBUILDs and builds packages locally
+- Commands: install, list, search, update, help
+- Self-updating capability
+- No dependencies except bash and makepkg
+
+### ap-dev (Developer Tool)
+- Written in Python
+- Manages package repository
+- Commands: new, test, update, publish, check, clean, list
+- Auto-generates packages.json from PKGBUILDs
+- Single source of truth: version info only in PKGBUILD
+
+## Repository Structure
+
+```
+arch-repo/
+├── ap                    # User package manager (bash)
+├── ap-dev               # Developer tool (python)
+├── setup.sh             # Installation script for ap
+├── packages.json        # Auto-generated package list
+├── index.html           # GitHub Pages website
+├── .gitignore           # Ignores build artifacts globally
+└── pkgbuilds/           # Package sources
+    └── package-name-angelsen/
+        ├── PKGBUILD     # Package build script
+        └── (source files)
+```
+
+## Package Naming Convention
+
+All packages follow the pattern: `package-name-angelsen`
+
+This suffix identifies them as custom builds while keeping the main package name recognizable.
+
+## Available Packages
+
+- google-chrome-stable-angelsen: Google Chrome browser with debug wrapper for development
+- claude-code-angelsen: Anthropic's Claude Code CLI tool for AI-assisted coding
+
+## How It Works
+
+1. User installs ap: `curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash`
+2. User installs package: `ap install package-name-angelsen`
+3. ap downloads PKGBUILD from this repository
+4. ap fetches required source files
+5. Package is built locally using makepkg
+6. Package is installed via pacman
+
+## Development Workflow
+
+1. Create new package: `./ap-dev new my-package-angelsen`
+2. Edit PKGBUILD in pkgbuilds/my-package-angelsen/
+3. Test locally: `ap-dev test`
+4. Publish: `ap-dev publish` (updates packages.json and pushes to GitHub)
+
+## Key Design Decisions
+
+- No binary hosting (avoids GitHub's 100MB limit)
+- Everything built from source on user's machine
+- Single source of truth for versions (PKGBUILD only)
+- Auto-generated packages.json from PKGBUILDs
+- Global .gitignore for build artifacts
+- Consistent package naming with -angelsen suffix
+
+## Website
+
+https://angelsen.github.io/arch-repo/
+
+The website dynamically loads package information from packages.json and provides installation instructions.
+
+## Contributing
+
+To add a new package:
+1. Fork the repository
+2. Create package with ap-dev
+3. Test thoroughly
+4. Submit pull request
+
+## License
+
+Individual packages maintain their upstream licenses. The repository infrastructure is provided as-is for the Arch Linux community.
