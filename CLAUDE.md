@@ -23,6 +23,9 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 # Update packages.json from all PKGBUILDs
 ./ap-dev update
 
+# Update checksums in PKGBUILD (after version change)
+./ap-dev updpkgsums <package-name>
+
 # Publish changes (update, commit, push)
 ./ap-dev publish
 
@@ -72,6 +75,8 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 - The repository is entirely static, served via GitHub Pages
 - Package metadata is extracted directly from PKGBUILDs
 - The `ap` tool requires no local repository clone - works entirely via HTTPS
+- .SRCINFO files are auto-generated for AUR compatibility
+- Code quality maintained with Makefile (format/lint)
 
 ### PKGBUILD Validation
 

@@ -28,6 +28,7 @@ ap-dev test [package]     # Build package locally
 ap-dev list               # List all packages with versions
 ap-dev check              # Validate all PKGBUILDs
 ap-dev update             # Regenerate packages.json from PKGBUILDs
+ap-dev updpkgsums <pkg>   # Update checksums in PKGBUILD
 ap-dev publish            # Update packages.json, commit and push
 ap-dev clean              # Remove all build artifacts
 ```
@@ -39,6 +40,14 @@ See [packages.json](packages.json) or visit https://angelsen.github.io/arch-repo
 Current packages are automatically listed on the website and updated when new packages are added.
 
 ## Development
+
+### Code Quality
+
+```bash
+make format   # Format all code (shfmt, ruff, prettier)
+make lint     # Lint all code (namcap, shellcheck, ruff)
+make clean    # Remove backup files
+```
 
 ### Adding a New Package
 
