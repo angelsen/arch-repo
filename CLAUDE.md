@@ -9,6 +9,7 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 ## Common Development Commands
 
 ### Package Management (ap-dev)
+
 ```bash
 # Create new package from template
 ./ap-dev new <package-name>
@@ -33,6 +34,7 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 ```
 
 ### Testing Package Installation (ap)
+
 ```bash
 # Install a package locally
 ./ap install <package-name>
@@ -47,6 +49,7 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 ## Architecture
 
 ### Repository Structure
+
 - **ap**: Bash script that downloads PKGBUILDs from GitHub Pages and builds packages locally using makepkg
 - **ap-dev**: Python script for maintainers to manage packages, validate PKGBUILDs, and publish updates
 - **pkgbuilds/**: Contains individual package directories with PKGBUILD files and source files
@@ -54,6 +57,7 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
 - **index.html**: GitHub Pages website that displays available packages
 
 ### Package Distribution Flow
+
 1. Maintainer creates/updates package in `pkgbuilds/<package-name>/`
 2. `ap-dev publish` updates packages.json and pushes to GitHub
 3. GitHub Pages serves the repository at https://angelsen.github.io/arch-repo/
@@ -63,20 +67,25 @@ This is a custom Arch Linux package repository that provides a lightweight AUR-l
    - Installs with pacman
 
 ### Key Design Principles
+
 - Packages are built locally on the user's machine using makepkg
 - The repository is entirely static, served via GitHub Pages
 - Package metadata is extracted directly from PKGBUILDs
 - The `ap` tool requires no local repository clone - works entirely via HTTPS
 
 ### PKGBUILD Validation
+
 The `ap-dev` tool validates PKGBUILDs by sourcing them in bash and extracting variables. Required fields:
+
 - pkgname
 - pkgver
 - pkgrel
 - pkgdesc
 
 ### Adding New Packages
+
 When creating a new package:
+
 1. Use `ap-dev new <name>` to create from template
 2. Edit the PKGBUILD following Arch packaging standards
 3. Place any local source files in the package directory

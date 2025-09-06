@@ -19,31 +19,31 @@ install() {
         echo "Usage: ap install <package-name>"
         exit 1
     fi
-    
+
     echo -e "${BLUE}📦 Installing${NC} $package..."
-    
+
     # Create temp directory
     tmpdir=$(mktemp -d)
-    trap "rm -rf $tmpdir" EXIT
-    cd "$tmpdir"
-    
+    trap 'rm -rf "$tmpdir"' EXIT
+    cd "$tmpdir" || exit 1
+
     # Download PKGBUILD
     if ! curl -fsL "$REPO/pkgbuilds/$package/PKGBUILD" -o PKGBUILD; then
         echo -e "${RED}Error:${NC} Package '$package' not found!"
         exit 1
     fi
-    
+
     # Download package files from packages.json
     echo -e "${BLUE}→${NC} Downloading package files..."
-    
+
     # Get file list from packages.json (required)
     files=$(curl -s "$REPO/packages.json" 2>/dev/null | jq -r ".packages[] | select(.name == \"$package\") | .files[]?" 2>/dev/null)
-    
+
     if [[ -z "$files" ]]; then
         echo -e "${RED}Error:${NC} Package files not found in packages.json. Repository may need updating."
         exit 1
     fi
-    
+
     # Download each file
     for file in $files; do
         echo -e "  ${BLUE}↓${NC} $file"
@@ -52,11 +52,11 @@ install() {
             exit 1
         fi
     done
-    
+
     # Build and install
     echo -e "${BLUE}→${NC} Building package..."
     makepkg -si
-    
+
     echo -e "${GREEN}✓${NC} Installation complete!"
 }
 
@@ -74,7 +74,7 @@ search() {
         list
         return
     fi
-    
+
     echo -e "${BLUE}🔍 Searching for '${query}'...${NC}"
     curl -s "$REPO/packages.json" 2>/dev/null | jq -r ".packages[] | select(.name | contains(\"$query\")) | .name" 2>/dev/null || {
         # Fallback search
@@ -88,22 +88,22 @@ search() {
 
 update() {
     echo -e "${BLUE}🔄 Checking for updates...${NC}"
-    
+
     # Get remote version
     remote_version=$(curl -s "$REPO/ap" | grep "^VERSION=" | cut -d'"' -f2)
-    
+
     if [[ -z "$remote_version" ]]; then
         echo -e "${RED}Error:${NC} Could not fetch remote version"
         exit 1
     fi
-    
+
     if [[ "$remote_version" == "$VERSION" ]]; then
         echo -e "${GREEN}✓${NC} Already up to date (v$VERSION)"
         return 0
     fi
-    
+
     echo -e "${YELLOW}→${NC} Updating from v$VERSION to v$remote_version"
-    
+
     # Download new version
     if curl -fsL "$REPO/ap" -o /tmp/ap.new; then
         chmod +x /tmp/ap.new
@@ -118,11 +118,11 @@ update() {
 version() {
     echo "ap version $VERSION"
     echo "Repository: $REPO"
-    
+
     # Check for updates
     echo -e "\n${BLUE}Checking for updates...${NC}"
     remote_version=$(curl -s "$REPO/ap" 2>/dev/null | grep "^VERSION=" | cut -d'"' -f2)
-    
+
     if [[ -n "$remote_version" ]]; then
         if [[ "$remote_version" != "$VERSION" ]]; then
             echo -e "${YELLOW}→ Update available:${NC} v$remote_version"
@@ -136,7 +136,7 @@ version() {
 }
 
 help() {
-    cat << EOF
+    cat <<EOF
 ap - Angelsen's Package manager v$VERSION
 
 Usage: ap <command> [options]
@@ -160,13 +160,13 @@ EOF
 
 # Main
 case "$1" in
-    install|i) install "$2" ;;
-    list|l) list ;;
-    search|s) search "$2" ;;
-    update|u) update ;;
-    version|v) version ;;
-    help|h|"") help ;;
-    *) 
+    install | i) install "$2" ;;
+    list | l) list ;;
+    search | s) search "$2" ;;
+    update | u) update ;;
+    version | v) version ;;
+    help | h | "") help ;;
+    *)
         echo -e "${RED}Unknown command:${NC} $1"
         echo "Try 'ap help' for usage"
         exit 1

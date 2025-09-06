@@ -14,7 +14,7 @@ curl -fsSL https://angelsen.github.io/arch-repo/setup.sh | bash
 
 ```bash
 ap list                   # List available packages
-ap search chrome          # Search for packages  
+ap search chrome          # Search for packages
 ap install google-chrome-stable-angelsen  # Install a package
 ap update                 # Update ap itself
 ap help                   # Show help

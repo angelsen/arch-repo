@@ -5,9 +5,7 @@
       "version": "1.0.90-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
-      "files": [
-        "claude-code-angelsen.install"
-      ]
+      "files": ["claude-code-angelsen.install"]
     },
     {
       "name": "google-chrome-stable-angelsen",

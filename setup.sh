@@ -25,7 +25,7 @@ if ! curl -fsL https://angelsen.github.io/arch-repo/ap -o /tmp/ap; then
     echo "Error: Failed to download ap"
     echo "The repository might not be deployed yet."
     echo "Using local file instead..."
-    
+
     # Fallback to local file if available
     if [[ -f "./ap" ]]; then
         cp ./ap /tmp/ap
