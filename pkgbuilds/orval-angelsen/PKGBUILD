@@ -1,0 +1,63 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=orval-angelsen
+_pkgname=orval
+pkgver=7.11.2
+pkgrel=1
+pkgdesc="A swagger client generator for typescript"
+arch=('any')
+url="https://github.com/anymaniax/orval"
+license=('MIT')
+depends=('nodejs>=18')
+makedepends=('npm' 'jq')
+provides=('orval')
+conflicts=('orval' 'nodejs-orval')
+source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
+noextract=("${_pkgname}-${pkgver}.tgz")
+sha256sums=('17de4278c13ae78df7a81c9f94725098813a1844f3400ea166001242d756abd3')
+
+package() {
+    # Create temporary npm cache directory
+    local npm_cache="${srcdir}/npm-cache"
+    mkdir -p "${npm_cache}"
+    
+    # Install the package globally with npm
+    npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
+        "${srcdir}/${_pkgname}-${pkgver}.tgz"
+    
+    # Remove npm cache
+    rm -rf "${npm_cache}"
+    
+    # Remove references to $pkgdir and $srcdir
+    find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
+    
+    # Clean up package.json files using jq
+    find "${pkgdir}" -type f -name package.json | while read pkgjson; do
+        local tmppackage="$(mktemp)"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        mv "${tmppackage}" "${pkgjson}"
+        chmod 644 "${pkgjson}"
+    done
+    
+    # Fix npm's permissions
+    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
+    find "${pkgdir}/usr" -type f -exec chmod 644 {} +
+    
+    # Make the main executable actually executable
+    chmod 755 "${pkgdir}/usr/lib/node_modules/${_pkgname}/dist/bin/orval.js"
+    
+    # The bin symlink should already be created by npm, but ensure it's executable
+    if [[ -L "${pkgdir}/usr/bin/orval" ]]; then
+        # Symlink exists, permissions of target matter
+        :
+    elif [[ -f "${pkgdir}/usr/bin/orval" ]]; then
+        chmod 755 "${pkgdir}/usr/bin/orval"
+    fi
+    
+    # Install license file if it exists (orval doesn't include one in npm package)
+    # The package.json shows MIT license
+    if [[ -f "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" ]]; then
+        install -Dm644 "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" \
+            "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    fi
+}

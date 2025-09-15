@@ -6,6 +6,7 @@
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
+        "claude-code-1.0.113.tgz",
         "claude-code-angelsen.install"
       ]
     },
@@ -19,6 +20,13 @@
         "google-chrome-stable-angelsen.install",
         "google-chrome-stable.sh"
       ]
+    },
+    {
+      "name": "orval-angelsen",
+      "version": "7.11.2-1",
+      "description": "A swagger client generator for typescript",
+      "url": "https://github.com/anymaniax/orval",
+      "files": []
     }
   ],
   "tools": {
