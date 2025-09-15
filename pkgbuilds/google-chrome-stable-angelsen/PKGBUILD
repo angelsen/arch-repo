@@ -3,7 +3,7 @@
 pkgname=google-chrome-stable-angelsen
 _pkgname=google-chrome-stable
 pkgver=140.0.7339.80
-pkgrel=1
+pkgrel=2
 pkgdesc="Web browser from Google (Stable Channel)"
 arch=('x86_64')
 url="https://www.google.com/chrome"
@@ -21,14 +21,18 @@ source=("https://dl.google.com/linux/chrome/deb/pool/main/g/${_pkgname}/${_pkgna
     'google-chrome-stable.sh'
     'eula_text.html')
 sha512sums=('c37b05ae25c8184affa52cdf8b1bee4de511bc3c3649a61bc95f963f5ae2ca6207b0dfee7af8ce6deb7ce752e79fb6aaf6c1bfc798b447fd2a5d7060f60a8d88'
-            'de02b498a4b5b93e21622c8dba57befe795d733a04656be911cc38e28bfef0e20470450f44be523bbde8d4de28f79c10434846ca01fc2a2f4e67707b79332f94'
+            'f2f64bcf0064f027a0ca75a9aa485651ad70a54738d99b930f5f3c701207a777c4f0a9873efe509199e925cd36711a9266e753a8c1ef53fb923e36e65d55f234'
             '2501777a50779c922268f2fc0faa663f07f08f73e3d68453fb16c2eabd360d0bc9ca61cf63e6251eff96fa3cccd0717b5f8be9a2419cc4219763600bd054dea3')
 
 package() {
     # Extract the data from the deb package
     bsdtar -xf data.tar.xz -C "$pkgdir/"
 
+    # Remove the Debian symlink - we'll replace it with our wrapper
+    rm "$pkgdir"/usr/bin/google-chrome-stable
+    
     # Install our custom launcher that supports user flags
+    # This will call Google's wrapper which then calls the actual Chrome binary
     install -m755 google-chrome-stable.sh "$pkgdir"/usr/bin/google-chrome-stable
 
     # Install the EULA
