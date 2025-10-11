@@ -9,12 +9,13 @@
         "claude-code-1.0.113.tgz",
         "claude-code-1.0.128.tgz",
         "claude-code-2.0.1.tgz",
+        "claude-code-2.0.14.tgz",
         "claude-code-angelsen.install"
       ]
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "140.0.7339.80-2",
+      "version": "141.0.7390.76-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
