@@ -1,0 +1,40 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=kiro-angelsen
+pkgver=202510022241
+pkgrel=1
+pkgdesc="AI IDE for prototype to production by AWS"
+arch=('x86_64')
+url="https://kiro.aws"
+license=('custom')
+depends=('alsa-lib' 'gtk3' 'libcups' 'libxss' 'libxtst' 'nss' 'xdg-utils')
+optdepends=('libgnome-keyring: password storage')
+provides=('kiro')
+conflicts=('kiro')
+options=('!strip' '!emptydirs')
+install="${pkgname}.install"
+source=("https://prod.download.desktop.kiro.dev/releases/${pkgver}--distro-linux-x64-deb/${pkgver}-distro-linux-x64.deb")
+sha512sums=('c43f85731bd73a7b5df2733ba3ad1016768d3e25cfab088052a930e02fb317789e1c5b5015818b16e6c6d24beaa32fda8b9e16831e2849c8f10666dd0438045a')
+
+package() {
+    # Extract the data from the deb package
+    bsdtar -xf data.tar.xz -C "$pkgdir/"
+
+    # Move from /usr/share/kiro to /opt/kiro
+    install -dm755 "$pkgdir/opt"
+    mv "$pkgdir/usr/share/kiro" "$pkgdir/opt/kiro"
+
+    # Create symlink for the binary
+    install -dm755 "$pkgdir/usr/bin"
+    ln -s /opt/kiro/kiro "$pkgdir/usr/bin/kiro"
+
+    # Desktop files and bash completion are already in correct locations
+    # (/usr/share/applications/, /usr/share/bash-completion/)
+
+    # Install license
+    install -Dm644 "$pkgdir/opt/kiro/LICENSES.chromium.html" \
+        "$pkgdir/usr/share/licenses/${pkgname}/LICENSES.chromium.html"
+
+    # Clean up appdata (not standard on Arch)
+    rm -rf "$pkgdir/usr/share/appdata"
+}

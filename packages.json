@@ -25,8 +25,15 @@
       ]
     },
     {
+      "name": "kiro-angelsen",
+      "version": "202510022241-1",
+      "description": "AI IDE for prototype to production by AWS",
+      "url": "https://kiro.aws",
+      "files": []
+    },
+    {
       "name": "orval-angelsen",
-      "version": "7.11.2-1",
+      "version": "7.13.2-1",
       "description": "A swagger client generator for typescript",
       "url": "https://github.com/anymaniax/orval",
       "files": [

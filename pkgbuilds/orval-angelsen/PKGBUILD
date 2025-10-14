@@ -2,7 +2,7 @@
 
 pkgname=orval-angelsen
 _pkgname=orval
-pkgver=7.11.2
+pkgver=7.13.2
 pkgrel=1
 pkgdesc="A swagger client generator for typescript"
 arch=('any')
@@ -14,7 +14,7 @@ provides=('orval')
 conflicts=('orval' 'nodejs-orval')
 source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('17de4278c13ae78df7a81c9f94725098813a1844f3400ea166001242d756abd3')
+sha256sums=('1775c2a59c400b41aa8654a608ac4ea8f61024ddab981cb4deafa76f8de6e372')
 
 package() {
     # Create temporary npm cache directory
