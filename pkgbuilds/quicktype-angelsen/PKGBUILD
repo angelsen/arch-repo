@@ -1,36 +1,36 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
-pkgname=orval-angelsen
-_pkgname=orval
-pkgver=7.13.2
+pkgname=quicktype-angelsen
+_pkgname=quicktype
+pkgver=23.2.6
 pkgrel=2
-pkgdesc="A swagger client generator for typescript"
+pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
 arch=('any')
-url="https://github.com/anymaniax/orval"
-license=('MIT')
+url="https://github.com/glideapps/quicktype"
+license=('Apache-2.0')
 depends=('nodejs>=18')
 makedepends=('npm' 'jq')
-provides=('orval')
-conflicts=('orval' 'nodejs-orval')
+provides=('quicktype')
+conflicts=('quicktype')
 source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('1775c2a59c400b41aa8654a608ac4ea8f61024ddab981cb4deafa76f8de6e372')
+sha256sums=('a8cf7412ccc3ce1c04b1083cced2c47b0b7b043b77fc56cbef5c151aff2c9daa')
 
 package() {
     # Create temporary npm cache directory
     local npm_cache="${srcdir}/npm-cache"
     mkdir -p "${npm_cache}"
-    
+
     # Install the package globally with npm
     npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
         "${srcdir}/${_pkgname}-${pkgver}.tgz"
-    
+
     # Remove npm cache
     rm -rf "${npm_cache}"
-    
+
     # Remove references to $pkgdir and $srcdir
     find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
-    
+
     # Clean up package.json files using jq
     find "${pkgdir}" -type f -name package.json | while read pkgjson; do
         local tmppackage="$(mktemp)"
@@ -38,27 +38,26 @@ package() {
         mv "${tmppackage}" "${pkgjson}"
         chmod 644 "${pkgjson}"
     done
-    
+
     # Fix npm's permissions
     find "${pkgdir}/usr" -type d -exec chmod 755 {} +
     find "${pkgdir}/usr" -type f -exec chmod 644 {} +
-    
+
     # Make the main executable actually executable
-    chmod 755 "${pkgdir}/usr/lib/node_modules/${_pkgname}/dist/bin/orval.js"
+    chmod 755 "${pkgdir}/usr/lib/node_modules/${_pkgname}/dist/index.js"
 
     # Make all node_modules binaries executable
     find "${pkgdir}/usr/lib/node_modules/${_pkgname}/node_modules/.bin" -type f -exec chmod 755 {} + 2>/dev/null || true
 
     # The bin symlink should already be created by npm, but ensure it's executable
-    if [[ -L "${pkgdir}/usr/bin/orval" ]]; then
+    if [[ -L "${pkgdir}/usr/bin/quicktype" ]]; then
         # Symlink exists, permissions of target matter
         :
-    elif [[ -f "${pkgdir}/usr/bin/orval" ]]; then
-        chmod 755 "${pkgdir}/usr/bin/orval"
+    elif [[ -f "${pkgdir}/usr/bin/quicktype" ]]; then
+        chmod 755 "${pkgdir}/usr/bin/quicktype"
     fi
-    
-    # Install license file if it exists (orval doesn't include one in npm package)
-    # The package.json shows MIT license
+
+    # Install license file if it exists
     if [[ -f "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" ]]; then
         install -Dm644 "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" \
             "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
