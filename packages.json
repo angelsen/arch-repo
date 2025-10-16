@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "claude-code-angelsen",
-      "version": "2.0.14-1",
+      "version": "2.0.19-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -35,7 +35,7 @@
     },
     {
       "name": "orval-angelsen",
-      "version": "7.13.2-2",
+      "version": "7.13.2-3",
       "description": "A swagger client generator for typescript",
       "url": "https://github.com/anymaniax/orval",
       "files": [
@@ -45,10 +45,12 @@
     },
     {
       "name": "quicktype-angelsen",
-      "version": "23.2.6-2",
+      "version": "23.2.6-3",
       "description": "Generate types and converters from JSON, Schema, and GraphQL",
       "url": "https://github.com/glideapps/quicktype",
-      "files": []
+      "files": [
+        "quicktype-23.2.6.tgz"
+      ]
     }
   ],
   "tools": {

@@ -3,7 +3,7 @@
 pkgname=orval-angelsen
 _pkgname=orval
 pkgver=7.13.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A swagger client generator for typescript"
 arch=('any')
 url="https://github.com/anymaniax/orval"
@@ -48,6 +48,8 @@ package() {
 
     # Make all node_modules binaries executable
     find "${pkgdir}/usr/lib/node_modules/${_pkgname}/node_modules/.bin" -type f -exec chmod 755 {} + 2>/dev/null || true
+    # Make platform-specific binaries executable (like esbuild)
+    find "${pkgdir}/usr/lib/node_modules/${_pkgname}/node_modules/@esbuild" -type f -name 'esbuild' -exec chmod 755 {} + 2>/dev/null || true
 
     # The bin symlink should already be created by npm, but ensure it's executable
     if [[ -L "${pkgdir}/usr/bin/orval" ]]; then

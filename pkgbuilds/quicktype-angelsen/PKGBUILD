@@ -3,7 +3,7 @@
 pkgname=quicktype-angelsen
 _pkgname=quicktype
 pkgver=23.2.6
-pkgrel=2
+pkgrel=3
 pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
 arch=('any')
 url="https://github.com/glideapps/quicktype"
@@ -48,6 +48,8 @@ package() {
 
     # Make all node_modules binaries executable
     find "${pkgdir}/usr/lib/node_modules/${_pkgname}/node_modules/.bin" -type f -exec chmod 755 {} + 2>/dev/null || true
+    # Make platform-specific binaries executable (like esbuild)
+    find "${pkgdir}/usr/lib/node_modules/${_pkgname}/node_modules/@esbuild" -type f -name 'esbuild' -exec chmod 755 {} + 2>/dev/null || true
 
     # The bin symlink should already be created by npm, but ensure it's executable
     if [[ -L "${pkgdir}/usr/bin/quicktype" ]]; then
