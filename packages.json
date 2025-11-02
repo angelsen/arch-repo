@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "claude-code-angelsen",
-      "version": "2.0.29-1",
+      "version": "2.0.31-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -12,6 +12,7 @@
         "claude-code-2.0.14.tgz",
         "claude-code-2.0.19.tgz",
         "claude-code-2.0.25.tgz",
+        "claude-code-2.0.29.tgz",
         "claude-code-angelsen.install"
       ]
     },
