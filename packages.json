@@ -13,6 +13,7 @@
         "claude-code-2.0.19.tgz",
         "claude-code-2.0.25.tgz",
         "claude-code-2.0.29.tgz",
+        "claude-code-2.0.31.tgz",
         "claude-code-angelsen.install"
       ]
     },
@@ -54,6 +55,13 @@
       "files": [
         "quicktype-23.2.6.tgz"
       ]
+    },
+    {
+      "name": "rustdesk-bin-angelsen",
+      "version": "1.4.4-1",
+      "description": "Remote desktop software, the open source TeamViewer alternative",
+      "url": "https://rustdesk.com",
+      "files": []
     }
   ],
   "tools": {
