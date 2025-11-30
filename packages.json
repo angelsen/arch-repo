@@ -2,18 +2,10 @@
   "packages": [
     {
       "name": "claude-code-angelsen",
-      "version": "2.0.31-1",
+      "version": "2.0.55-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
-        "claude-code-1.0.113.tgz",
-        "claude-code-1.0.128.tgz",
-        "claude-code-2.0.1.tgz",
-        "claude-code-2.0.14.tgz",
-        "claude-code-2.0.19.tgz",
-        "claude-code-2.0.25.tgz",
-        "claude-code-2.0.29.tgz",
-        "claude-code-2.0.31.tgz",
         "claude-code-angelsen.install"
       ]
     },
@@ -42,26 +34,23 @@
       "version": "7.13.2-3",
       "description": "A swagger client generator for typescript",
       "url": "https://github.com/anymaniax/orval",
-      "files": [
-        "orval-7.11.2.tgz",
-        "orval-7.13.2.tgz"
-      ]
+      "files": []
     },
     {
       "name": "quicktype-angelsen",
       "version": "23.2.6-3",
       "description": "Generate types and converters from JSON, Schema, and GraphQL",
       "url": "https://github.com/glideapps/quicktype",
-      "files": [
-        "quicktype-23.2.6.tgz"
-      ]
+      "files": []
     },
     {
       "name": "rustdesk-bin-angelsen",
       "version": "1.4.4-1",
       "description": "Remote desktop software, the open source TeamViewer alternative",
       "url": "https://rustdesk.com",
-      "files": []
+      "files": [
+        "rustdesk-bin-angelsen.install"
+      ]
     }
   ],
   "tools": {

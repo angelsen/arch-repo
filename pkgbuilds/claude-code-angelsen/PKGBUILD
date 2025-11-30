@@ -2,7 +2,7 @@
 
 pkgname=claude-code-angelsen
 _pkgname=@anthropic-ai/claude-code
-pkgver=2.0.31
+pkgver=2.0.55
 pkgrel=1
 provides=('claude-code')
 conflicts=('claude-code')
@@ -21,7 +21,7 @@ optdepends=(
 install="${pkgname}.install"
 source=("$(npm view "${_pkgname}@${pkgver}" dist.tarball)")
 noextract=("$(basename "$(npm view "${_pkgname}@${pkgver}" dist.tarball)")")
-sha256sums=('6b67f14f030554cf055f030c82de64955438ed8c7225f96b1576a15c2be15fa4')
+sha256sums=('5caf81de81ab727022d7d6bb4ed82fd99a71d3e33f9c341e9e11d05844ae9991')
 
 prepare() {
     # Ensure reproducible builds

@@ -18,6 +18,7 @@ pkgbuilds/**/*.deb
 pkgbuilds/**/*.tar.gz
 pkgbuilds/**/*.tar.xz
 pkgbuilds/**/*.tar.bz2
+pkgbuilds/**/*.tgz
 pkgbuilds/**/*.zip
 pkgbuilds/**/*.AppImage
 pkgbuilds/**/*.rpm
