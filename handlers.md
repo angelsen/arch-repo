@@ -46,6 +46,3 @@ Example:
 - sudo *
 - rm -rf *
 ```
-# CONFIRMATION
-## Safe Commands (auto, 3s)
-- *
