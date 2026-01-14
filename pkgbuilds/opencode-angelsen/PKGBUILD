@@ -1,0 +1,24 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=opencode-angelsen
+_pkgname=opencode-linux-x64
+pkgver=1.1.20
+pkgrel=1
+provides=('opencode')
+conflicts=('opencode')
+pkgdesc="An open source AI coding agent"
+arch=('x86_64')
+url="https://opencode.ai"
+license=('MIT')
+depends=()
+optdepends=(
+    'git: For git operations'
+    'github-cli: For GitHub workflows'
+)
+source=("$(npm view "${_pkgname}@${pkgver}" dist.tarball)")
+sha256sums=('aa8c561792874f96715260ee3b3836102758edd0e89bdb483a381c2193b85f75')
+
+package() {
+    cd "${srcdir}/package"
+    install -Dm755 bin/opencode "${pkgdir}/usr/bin/opencode"
+}
