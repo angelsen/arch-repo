@@ -11,7 +11,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "142.0.7444.59-1",
+      "version": "144.0.7559.59-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
