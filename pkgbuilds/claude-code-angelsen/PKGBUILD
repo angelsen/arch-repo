@@ -52,11 +52,12 @@ package() {
         chmod 644 "${pkgjson}"
     fi
 
-    # Remove non-x86_64 architecture binaries
-    rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/arm64-linux"
-    rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/arm64-darwin"
-    rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/x64-darwin"
-    rm -rf "${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor/ripgrep/x64-win32"
+    # Remove non-x86_64-linux vendor binaries (ripgrep, audio-capture, seccomp, etc.)
+    local vendor_dir="${pkgdir}/usr/lib/node_modules/${_pkgname}/vendor"
+    if [ -d "${vendor_dir}" ]; then
+        find "${vendor_dir}" -mindepth 2 -maxdepth 2 -type d \
+            ! -name "x64-linux" ! -name "x64" | xargs -r rm -rf
+    fi
 
     # Install the license file
     install -Dm644 "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE.md" \
