@@ -23,6 +23,9 @@ pkgbuilds/**/*.zip
 pkgbuilds/**/*.AppImage
 pkgbuilds/**/*.rpm
 
+# Downloaded raw binaries (noextract sources without extension)
+pkgbuilds/claude-code-angelsen/claude-[0-9]*
+
 # Makepkg files
 pkgbuilds/**/*.log
 pkgbuilds/**/*.sig
