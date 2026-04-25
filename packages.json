@@ -18,7 +18,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "146.0.7680.80-1",
+      "version": "147.0.7727.116-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -71,7 +71,9 @@
       "version": "3.93.2-1",
       "description": "A CLI tool to build for the Shopify platform",
       "url": "https://github.com/Shopify/cli",
-      "files": []
+      "files": [
+        "LICENSE-3.93.2"
+      ]
     }
   ],
   "tools": {
