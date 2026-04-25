@@ -1,0 +1,66 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=shopify-cli-angelsen
+_npmname=@shopify/cli
+_pkgname=cli
+pkgver=3.93.2
+pkgrel=1
+pkgdesc="A CLI tool to build for the Shopify platform"
+arch=('x86_64')
+url="https://github.com/Shopify/cli"
+license=('MIT')
+depends=('nodejs>=18')
+makedepends=('npm' 'jq')
+provides=('shopify-cli')
+conflicts=('shopify-cli')
+source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz"
+        "LICENSE-${pkgver}::https://raw.githubusercontent.com/Shopify/cli/main/LICENSE")
+noextract=("${_pkgname}-${pkgver}.tgz")
+sha256sums=('b6b320b21f5f39b9dfd406d82eab8326bd885f5bd7db7d646529f5aa0066a32c'
+            '40614f57726c0804b64757fcf155ebfb59c9dddfc27cc17c7717e2993571c771')
+
+package() {
+    local npm_cache="${srcdir}/npm-cache"
+    mkdir -p "${npm_cache}"
+
+    npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
+        "${srcdir}/${_pkgname}-${pkgver}.tgz"
+
+    rm -rf "${npm_cache}"
+
+    # Remove references to $pkgdir and $srcdir
+    find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
+
+    # Clean up package.json files using jq
+    find "${pkgdir}" -type f -name package.json | while read pkgjson; do
+        local tmppackage="$(mktemp)"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        mv "${tmppackage}" "${pkgjson}"
+        chmod 644 "${pkgjson}"
+    done
+
+    # Fix npm's permissions
+    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
+    find "${pkgdir}/usr" -type f -exec chmod 644 {} +
+
+    # Make the main executable actually executable
+    chmod 755 "${pkgdir}/usr/lib/node_modules/${_npmname}/bin/run.js"
+
+    # Make all node_modules binaries executable
+    local _nodemodules="${pkgdir}/usr/lib/node_modules/${_npmname}/node_modules"
+    find "${_nodemodules}/.bin" -type f -exec chmod 755 {} + 2>/dev/null || true
+
+    # Make native addons executable
+    find "${_nodemodules}" -name "*.node" -exec chmod 755 {} + 2>/dev/null || true
+
+    # Ensure the bin symlink target is executable
+    if [[ -L "${pkgdir}/usr/bin/shopify" ]]; then
+        :
+    elif [[ -f "${pkgdir}/usr/bin/shopify" ]]; then
+        chmod 755 "${pkgdir}/usr/bin/shopify"
+    fi
+
+    # Install license file
+    install -Dm644 "${srcdir}/LICENSE-${pkgver}" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

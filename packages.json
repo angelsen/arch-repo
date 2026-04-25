@@ -2,12 +2,19 @@
   "packages": [
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.110-1",
+      "version": "2.1.119-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
         "claude-code-angelsen.install"
       ]
+    },
+    {
+      "name": "forge-cli-angelsen",
+      "version": "12.18.0-1",
+      "description": "A command line interface for managing Atlassian-hosted apps",
+      "url": "https://developer.atlassian.com/platform/forge",
+      "files": []
     },
     {
       "name": "google-chrome-stable-angelsen",
@@ -58,6 +65,13 @@
       "files": [
         "rustdesk-bin-angelsen.install"
       ]
+    },
+    {
+      "name": "shopify-cli-angelsen",
+      "version": "3.93.2-1",
+      "description": "A CLI tool to build for the Shopify platform",
+      "url": "https://github.com/Shopify/cli",
+      "files": []
     }
   ],
   "tools": {

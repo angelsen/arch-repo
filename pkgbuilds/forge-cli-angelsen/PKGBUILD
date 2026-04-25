@@ -1,0 +1,81 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=forge-cli-angelsen
+_npmname=@forge/cli
+_pkgname=cli
+pkgver=12.18.0
+pkgrel=1
+pkgdesc="A command line interface for managing Atlassian-hosted apps"
+arch=('x86_64')
+url="https://developer.atlassian.com/platform/forge"
+license=('LicenseRef-Atlassian')
+depends=('nodejs>=18' 'libsecret')
+makedepends=('npm' 'jq')
+provides=('forge-cli')
+conflicts=('forge-cli')
+source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz")
+noextract=("${_pkgname}-${pkgver}.tgz")
+sha256sums=('b488d41a468ca88acd81b54abac9f4590e9040609acaa653a97e8905180d0201')
+
+package() {
+    local npm_cache="${srcdir}/npm-cache"
+    mkdir -p "${npm_cache}"
+
+    npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
+        "${srcdir}/${_pkgname}-${pkgver}.tgz"
+
+    rm -rf "${npm_cache}"
+
+    # Remove non-linux-x64 prebuilt binaries
+    local _nodemodules="${pkgdir}/usr/lib/node_modules/${_npmname}/node_modules"
+    find "${_nodemodules}" -type d -name prebuilds | while read prebuilddir; do
+        find "$prebuilddir" -maxdepth 1 -mindepth 1 -type d ! -name "linux-x64" -exec rm -rf {} +
+    done
+
+    # Remove Windows-only fswin module
+    rm -rf "${_nodemodules}/fswin"
+
+    # Remove references to $pkgdir and $srcdir
+    find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
+
+    # Clean up package.json files using jq
+    find "${pkgdir}" -type f -name package.json | while read pkgjson; do
+        local tmppackage="$(mktemp)"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        mv "${tmppackage}" "${pkgjson}"
+        chmod 644 "${pkgjson}"
+    done
+
+    # Fix ownership (keytar prebuild has wrong owner)
+    chown -R root:root "${pkgdir}"
+
+    # Fix npm's permissions
+    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
+    find "${pkgdir}/usr" -type f -exec chmod 644 {} +
+
+    # Make the main executable actually executable
+    chmod 755 "${pkgdir}/usr/lib/node_modules/${_npmname}/out/bin/cli.js"
+
+    # Make all node_modules binaries executable
+    find "${_nodemodules}/.bin" -type f -exec chmod 755 {} + 2>/dev/null || true
+
+    # Make native addons executable
+    find "${_nodemodules}" -name "*.node" -exec chmod 755 {} + 2>/dev/null || true
+    find "${_nodemodules}" -path "*/prebuilds/linux-x64/*" -exec chmod 755 {} + 2>/dev/null || true
+
+    # Ensure the bin symlink target is executable
+    if [[ -L "${pkgdir}/usr/bin/forge" ]]; then
+        :
+    elif [[ -f "${pkgdir}/usr/bin/forge" ]]; then
+        chmod 755 "${pkgdir}/usr/bin/forge"
+    fi
+
+    # Install license file if it exists
+    if [[ -f "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE.txt" ]]; then
+        install -Dm644 "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE.txt" \
+            "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
+    elif [[ -f "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE" ]]; then
+        install -Dm644 "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE" \
+            "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    fi
+}
