@@ -2,7 +2,7 @@
 
 pkgname=google-chrome-stable-angelsen
 _pkgname=google-chrome-stable
-pkgver=148.0.7778.96
+pkgver=148.0.7778.178
 pkgrel=1
 pkgdesc="Web browser from Google (Stable Channel)"
 arch=('x86_64')
@@ -20,7 +20,7 @@ install=${pkgname}.install
 source=("https://dl.google.com/linux/chrome/deb/pool/main/g/${_pkgname}/${_pkgname}_${pkgver}-1_amd64.deb"
     'google-chrome-stable.sh'
     'eula_text.html')
-sha512sums=('27279f1a90f366d15ec1fa42428dc76da9d6752c5326bf1020b256365bbf060552633e541ce28b086fb5438b14e8354e021c4bf86988dbd20ea8da22b993e92c'
+sha512sums=('e9ff36a1ae98193e62ddba35b97b66809c472efa820b1f669fd297b82a7451758d7cc6278df77649c8bf62d139f410da6d1ae9aa8212d1bdea87ce0da76f9a10'
             'f2f64bcf0064f027a0ca75a9aa485651ad70a54738d99b930f5f3c701207a777c4f0a9873efe509199e925cd36711a9266e753a8c1ef53fb923e36e65d55f234'
             '2501777a50779c922268f2fc0faa663f07f08f73e3d68453fb16c2eabd360d0bc9ca61cf63e6251eff96fa3cccd0717b5f8be9a2419cc4219763600bd054dea3')
 
