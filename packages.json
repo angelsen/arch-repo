@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.145-1",
+      "version": "2.1.158-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -26,6 +26,13 @@
         "google-chrome-stable-angelsen.install",
         "google-chrome-stable.sh"
       ]
+    },
+    {
+      "name": "higgsfield-cli-angelsen",
+      "version": "0.1.40-1",
+      "description": "Generate images and videos from the terminal using 30+ Higgsfield AI models",
+      "url": "https://github.com/higgsfield-ai/cli",
+      "files": []
     },
     {
       "name": "kiro-angelsen",
