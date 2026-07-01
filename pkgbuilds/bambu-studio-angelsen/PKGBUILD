@@ -1,0 +1,60 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=bambu-studio-angelsen
+pkgver=02.07.01.62
+_buildstamp=20260616195227
+pkgrel=1
+pkgdesc="Cutting-edge slicing software for BambuLab 3D printers"
+arch=('x86_64')
+url="https://github.com/bambulab/BambuStudio"
+license=('AGPL-3.0-only')
+provides=('bambu-studio')
+conflicts=('bambu-studio' 'bambustudio-bin' 'bambustudio-git' 'bambustudio-appimage' 'bambustudio-nvidia-bin')
+depends=(
+	'cairo'
+	'dbus'
+	'fontconfig'
+	'gdk-pixbuf2'
+	'glib2'
+	'gst-plugins-base-libs'
+	'gstreamer'
+	'gtk3'
+	'libx11'
+	'mesa'
+	'pango'
+	'wayland'
+	'webkit2gtk-4.1'
+)
+options=('!strip' '!debug')
+source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudio/releases/download/v${pkgver}/BambuStudio_ubuntu24.04-v${pkgver}-${_buildstamp}.AppImage"
+	'bambu-studio.sh'
+	'bambu-studio.desktop')
+noextract=("bambu-studio-${pkgver}.AppImage")
+sha256sums=('fa98b608532dfbbbb2b0931483aac41e57fb19c175a2cc7bd7d528d5e0fbb287'
+	'SKIP'
+	'SKIP')
+
+prepare() {
+	chmod +x "bambu-studio-${pkgver}.AppImage"
+	"./bambu-studio-${pkgver}.AppImage" --appimage-extract
+}
+
+package() {
+	# Main application binary
+	install -Dm755 squashfs-root/bin/bambu-studio "${pkgdir}/opt/bambu-studio/bin/bambu-studio"
+
+	# Bundled ffmpeg libs (not available at matching soversions in Arch repos)
+	cp -a squashfs-root/bin/lib*.so* "${pkgdir}/opt/bambu-studio/bin/"
+
+	# Resources (profiles, shaders, fonts, i18n, etc.)
+	cp -r squashfs-root/resources "${pkgdir}/opt/bambu-studio/"
+
+	# Wrapper script
+	install -Dm755 bambu-studio.sh "${pkgdir}/usr/bin/bambu-studio"
+
+	# Desktop entry
+	install -Dm644 bambu-studio.desktop "${pkgdir}/usr/share/applications/bambu-studio.desktop"
+
+	# Icon
+	install -Dm644 squashfs-root/BambuStudio.png "${pkgdir}/usr/share/icons/hicolor/192x192/apps/bambu-studio.png"
+}

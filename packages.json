@@ -1,6 +1,13 @@
 {
   "packages": [
     {
+      "name": "bambu-studio-angelsen",
+      "version": "02.07.01.62-1",
+      "description": "Cutting-edge slicing software for BambuLab 3D printers",
+      "url": "https://github.com/bambulab/BambuStudio",
+      "files": []
+    },
+    {
       "name": "claude-code-angelsen",
       "version": "2.1.197-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
