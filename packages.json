@@ -12,7 +12,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.199-1",
+      "version": "2.1.202-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
