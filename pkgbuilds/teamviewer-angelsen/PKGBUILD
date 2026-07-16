@@ -1,0 +1,50 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=teamviewer-angelsen
+pkgver=15.78.3
+pkgrel=1
+pkgdesc="All-in-one software for remote support, remote access, and online meetings"
+arch=('x86_64')
+url="https://www.teamviewer.com"
+license=('custom')
+provides=('teamviewer')
+conflicts=('teamviewer' 'teamviewer-beta' 'teamviewer13' 'teamviewer-quicksupport')
+depends=(
+	'dbus'
+	'glib2'
+	'hicolor-icon-theme'
+	'libx11'
+	'libxcb'
+	'mesa'
+	'minizip'
+	'nspr'
+	'nss'
+	'polkit'
+	'qt5-quickcontrols'
+	'qt5-svg'
+	'qt5-x11extras'
+	'systemd-libs'
+	'util-linux-libs'
+	'wayland'
+)
+optdepends=(
+	'xdg-utils: for URL and mimetype handling'
+	'ttf-liberation: for consistent font rendering'
+	'pipewire: for screen sharing under Wayland'
+)
+options=('!strip')
+install="${pkgname}.install"
+source=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
+sha256sums=('c2b98b22bf2a34bbdf5b930c8fa7da17fba195d83d0e3f9e0e695c9043aa9e6a')
+
+package() {
+	# Extract the data from the deb package
+	bsdtar -xf data.tar.xz -C "$pkgdir/"
+
+	# Remove Debian-specific files
+	rm -rf "$pkgdir"/etc/apt
+
+	# Install the systemd service (vendor ships it under tv_bin/script/)
+	install -Dm644 "$pkgdir"/opt/teamviewer/tv_bin/script/teamviewerd.service \
+		"$pkgdir"/usr/lib/systemd/system/teamviewerd.service
+}
