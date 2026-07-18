@@ -1,0 +1,50 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=librepcb-bin-angelsen
+pkgver=2.1.1
+pkgrel=2
+pkgdesc="A free EDA software to develop printed circuit boards (prebuilt binary, includes librepcb-cli)"
+arch=('x86_64')
+url="https://librepcb.org/"
+license=('GPL-3.0-or-later')
+depends=('mesa' 'fontconfig' 'freetype2' 'libx11' 'libxcb' 'hicolor-icon-theme')
+optdepends=('qt6-imageformats: additional image format support')
+provides=('librepcb' 'librepcb-cli')
+conflicts=('librepcb' 'librepcb-cli')
+options=('!strip')
+source=("https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-x86_64.tar.gz"
+        "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-x86_64.tar.gz.asc")
+sha256sums=('d4165a0822c3e76bf15de5bd06e5a2070766458654a4e0a9f9637c9089fd8f03'
+            'SKIP')
+validpgpkeys=('D6F9AF572228C5BCD6B538407EF3061F5C8D5E25')
+
+package() {
+    local _src="librepcb-${pkgver}-linux-x86_64"
+
+    # Runtime tree (bin/lib/plugins/translations + LibrePCB's own share/librepcb
+    # data) stays together under /opt since qt.conf resolves plugins/translations
+    # relative to the binary's own location.
+    install -d "${pkgdir}/opt/librepcb"
+    cp -a "${_src}"/{bin,lib,plugins,translations} "${pkgdir}/opt/librepcb/"
+    install -d "${pkgdir}/opt/librepcb/share"
+    cp -a "${_src}/share/librepcb" "${pkgdir}/opt/librepcb/share/"
+
+    install -d "${pkgdir}/usr/bin"
+    # LIBREPCB_ENABLE_DESKTOP_INTEGRATION is baked into this upstream binary
+    # (it's built for AppImage distribution) and unconditionally nags to copy
+    # desktop/icon/mime files into ~/.local/share, unaware that this package
+    # already installs them system-wide. Disable it at runtime.
+    cat > "${pkgdir}/usr/bin/librepcb" <<'EOF'
+#!/bin/sh
+exec env LIBREPCB_ENABLE_DESKTOP_INTEGRATION=0 /opt/librepcb/bin/librepcb "$@"
+EOF
+    chmod 755 "${pkgdir}/usr/bin/librepcb"
+    ln -s /opt/librepcb/bin/librepcb-cli "${pkgdir}/usr/bin/librepcb-cli"
+
+    # Desktop integration files (already bundled in the release archive) go
+    # into the standard XDG locations instead.
+    install -d "${pkgdir}/usr/share"
+    cp -a "${_src}/share/applications" "${_src}/share/icons" \
+          "${_src}/share/mime" "${_src}/share/metainfo" \
+          "${pkgdir}/usr/share/"
+}

@@ -1,0 +1,33 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=librepcb-angelsen
+pkgver=2.1.1
+pkgrel=1
+pkgdesc="A free EDA software to develop printed circuit boards (includes librepcb-cli)"
+arch=('x86_64')
+url="https://librepcb.org/"
+license=('GPL-3.0-or-later')
+depends=('qt6-base' 'qt6-svg' 'glu' 'opencascade')
+makedepends=('cmake' 'ninja' 'qt6-tools' 'rust' 'cargo')
+optdepends=('qt6-imageformats: additional image format support')
+provides=('librepcb' 'librepcb-cli')
+conflicts=('librepcb' 'librepcb-cli')
+source=("https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-source.zip"
+        "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-source.zip.asc")
+sha256sums=('c5f6443e1fac1682fdb0f662136c4abb582b8ec9ce260ee94b4e82f0d8dd69c0'
+            'SKIP')
+validpgpkeys=('D6F9AF572228C5BCD6B538407EF3061F5C8D5E25')
+
+build() {
+    cd "librepcb-${pkgver}"
+    cmake -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_TESTS=OFF \
+        -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="${pkgdir}" cmake --install "librepcb-${pkgver}/build"
+}

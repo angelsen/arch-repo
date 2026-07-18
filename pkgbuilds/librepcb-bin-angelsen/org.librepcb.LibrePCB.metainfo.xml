@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.librepcb.LibrePCB</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>LibrePCB</name>
+  <summary>Design Schematics and PCBs</summary>
+  <developer_name>The LibrePCB Developers</developer_name>
+  <developer id="org.librepcb">
+    <name>The LibrePCB Developers</name>
+  </developer>
+
+  <description>
+    <p>LibrePCB is a free electronic design automation (EDA) software for developing printed circuit boards (PCBs).</p>
+    <p>Key Features:</p>
+    <ul>
+      <li>Cross-platform (Unix/Linux, macOS, Windows)</li>
+      <li>All-in-one package (project management, library/schematic/board editors)</li>
+      <li>Intuitive, modern and easy-to-use graphical user interface</li>
+      <li>Very powerful library design with some innovative concepts</li>
+      <li>Human-readable file formats</li>
+    </ul>
+  </description>
+
+  <!--
+    NOTES:
+      - Maximum resolution 1600x900px
+      - Captured with QT_SCALE_FACTOR=1.2
+  -->
+  <screenshots>
+    <screenshot type="default">
+      <caption>Schematic- and Board Editor</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/cross-probing.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Library Browser</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/add-component.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Library Management</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/libraries.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Device Editor</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/device.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Board Editor and 3D Preview</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/board.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Design Rule Check</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/drc.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Output Jobs</caption>
+      <image>https://raw.githubusercontent.com/LibrePCB/librepcb-doc/fb31bb154f00a4e0adebe8b1ac50877eebae96b4/static/output-jobs.png</image>
+    </screenshot>
+  </screenshots>
+
+  <keywords>
+    <keyword translate="no">EDA</keyword>
+    <keyword translate="no">PCB</keyword>
+    <keyword translate="no">PCBs</keyword>
+    <keyword>electronics</keyword>
+    <keyword>schematics</keyword>
+  </keywords>
+
+  <url type="homepage">https://librepcb.org</url>
+  <url type="bugtracker">https://github.com/LibrePCB/LibrePCB/issues</url>
+  <url type="faq">https://librepcb.org/faq/</url>
+  <url type="help">https://librepcb.org/docs/</url>
+  <url type="donation">https://librepcb.org/donate/</url>
+  <url type="translate">https://explore.transifex.com/librepcb/librepcb-application/</url>
+  <url type="contact">https://librepcb.org/contact/</url>
+  <url type="vcs-browser">https://github.com/LibrePCB/LibrePCB</url>
+  <url type="contribute">https://librepcb.org/contribute/</url>
+
+  <provides>
+    <binary>librepcb</binary>
+    <binary>librepcb-cli</binary>
+  </provides>
+
+  <launchable type="desktop-id">org.librepcb.LibrePCB.desktop</launchable>
+
+  <releases>
+    <!--
+      NOTES:
+        - Remove development releases when stable release is ready!
+        - For prereleases, use tilde instead of dash (e.g. "1.0.0~rc1")!
+    -->
+    <release version="2.1.1" date="2026-06-12" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Improve compatibility with FreeRouting</li>
+          <li>Render attribute values in schematics &amp; boards independent of locale</li>
+          <li>Various small bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/release-notes/2.1.1/</url>
+    </release>
+    <release version="2.1.0" date="2026-05-19" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>More themes &amp; color schemes</li>
+          <li>Cross-probing &amp; net highlighting</li>
+          <li>New project library manager</li>
+          <li>Automatic library updates</li>
+          <li>More realistic 3D renderings</li>
+          <li>View &amp; edit board from bottom</li>
+          <li>Several device editor improvements</li>
+          <li>Many more improvements &amp; bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/release-notes/2.1.0/</url>
+    </release>
+    <release version="2.0.1" date="2026-02-22" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Display properties of selected schematic- &amp; board objects</li>
+          <li>Auto-open board when opening a project</li>
+          <li>Various bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/release-notes/2.0.1/</url>
+    </release>
+    <release version="2.0.0" date="2026-01-28" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Completely new, tabbed, split-window UI</li>
+          <li>Schematic buses &amp; images</li>
+          <li>Individual pads in boards</li>
+          <li>Automatic via drills &amp; annular rings</li>
+          <li>Shared DRC settings &amp; output jobs</li>
+          <li>Many usability improvements</li>
+          <li>Various bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/release-notes/2.0.0/</url>
+    </release>
+    <release version="1.3.0" date="2025-03-24" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Interactive HTML BOM output job</li>
+          <li>Compatibility with KiCad v9 libraries</li>
+          <li>DRC check for useless vias</li>
+          <li>Various bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2025-03-24_release_1.3.0/</url>
+    </release>
+    <release version="1.2.0" date="2024-12-01" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>KiCad library import</li>
+          <li>Specctra DSN export / SES import</li>
+          <li>Open datasheets from schematic</li>
+          <li>Datasheet overlay for footprints</li>
+          <li>Mass import symbol pins from datasheets</li>
+          <li>Move &amp; align multiple footprint objects at once</li>
+          <li>Copy properties from one footprint object to other objects</li>
+          <li>Interactively re-number pads of a footprint</li>
+          <li>Much faster DRC &amp; plane rebuilding</li>
+          <li>Dark theme on Windows &amp; theme improvements</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2024-12-01_release_1.2.0/</url>
+    </release>
+    <release version="1.1.0" date="2024-04-03" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Live part information (prices, stock availability, ...)</li>
+          <li>EAGLE project import</li>
+          <li>Interactive device pinout assignment</li>
+          <li>Improved support for dark themes</li>
+          <li>Various bugfixes &amp; usability improvements</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2024-04-03_release_1.1.0/</url>
+    </release>
+    <release version="1.0.0" date="2023-09-24" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>3D viewer &amp; STEP export</li>
+          <li>MPN management &amp; assembly variants</li>
+          <li>Unified production data files generator</li>
+          <li>Thermal relief pads in planes</li>
+          <li>Blind &amp; buried vias</li>
+          <li>Plated and non-plated slots</li>
+          <li>Keepout zones</li>
+          <li>Rounded and custom footprint pad shapes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2023-09-24_release_1.0.0/</url>
+    </release>
+    <release version="0.1.7" date="2022-10-03" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Measure tool in all editors</li>
+          <li>EAGLE library import</li>
+          <li>Powerful print/PDF/image export</li>
+          <li>Gerber X3 pick&amp;place export</li>
+          <li>Improved, configurable keyboard shortcuts</li>
+          <li>Many usability improvements</li>
+          <li>Various bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2022-10-03_release_0.1.7/</url>
+    </release>
+    <release version="0.1.6" date="2021-11-02" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Start the PCB order process with LibrePCB Fab</li>
+          <li>DXF import</li>
+          <li>Many usability improvements</li>
+          <li>Various bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2021-11-02_release_0.1.6/</url>
+    </release>
+    <release version="0.1.5" date="2020-10-04" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Copy&amp;Paste in Boards and Schematics</li>
+          <li>Many Usability Improvements</li>
+          <li>Various Bugfixes</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2020-10-04_release_0.1.5/</url>
+    </release>
+    <release version="0.1.4" date="2020-05-03" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Many Usability Improvements</li>
+          <li>Pick&amp;Place CSV Export</li>
+          <li>SVG Export</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2020-05-03_release_0.1.4/</url>
+    </release>
+    <release version="0.1.3" date="2019-11-30" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Design rule check for boards</li>
+          <li>BOM export to CSV</li>
+          <li>Export boards to PDF</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2019-11-30_release_0.1.3/</url>
+    </release>
+    <release version="0.1.2" date="2019-07-14" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Support latest build environments (GCC 9.x and Qt 5.13)</li>
+          <li>Improved table widgets</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2019-07-14_release_0.1.2/</url>
+    </release>
+    <release version="0.1.1" date="2019-04-21" type="stable">
+      <description>
+        <p>Highlights:</p>
+        <ul>
+          <li>Design rule check for library elements</li>
+          <li>More powerful symbol variants</li>
+          <li>Transactional file system</li>
+        </ul>
+      </description>
+      <url type="details">https://librepcb.org/blog/2019-04-21_release_0.1.1/</url>
+    </release>
+    <release version="0.1.0" date="2018-11-25" type="stable">
+      <description>
+        <p>The first stable release!</p>
+      </description>
+      <url type="details">https://librepcb.org/blog/2018-11-25_release_0.1.0/</url>
+    </release>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+</component>

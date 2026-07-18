@@ -12,7 +12,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.210-1",
+      "version": "2.1.214-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -28,7 +28,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "150.0.7871.114-1",
+      "version": "150.0.7871.128-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -52,6 +52,20 @@
       "files": [
         "kiro-angelsen.install"
       ]
+    },
+    {
+      "name": "librepcb-angelsen",
+      "version": "2.1.1-1",
+      "description": "A free EDA software to develop printed circuit boards (includes librepcb-cli)",
+      "url": "https://librepcb.org/",
+      "files": []
+    },
+    {
+      "name": "librepcb-bin-angelsen",
+      "version": "2.1.1-2",
+      "description": "A free EDA software to develop printed circuit boards (prebuilt binary, includes librepcb-cli)",
+      "url": "https://librepcb.org/",
+      "files": []
     },
     {
       "name": "opencode-angelsen",
@@ -97,7 +111,9 @@
       "version": "15.78.3-1",
       "description": "All-in-one software for remote support, remote access, and online meetings",
       "url": "https://www.teamviewer.com",
-      "files": []
+      "files": [
+        "teamviewer-angelsen.install"
+      ]
     }
   ],
   "tools": {
