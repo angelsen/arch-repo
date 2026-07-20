@@ -12,7 +12,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.214-1",
+      "version": "2.1.215-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -58,14 +58,26 @@
       "version": "2.1.1-1",
       "description": "A free EDA software to develop printed circuit boards (includes librepcb-cli)",
       "url": "https://librepcb.org/",
-      "files": []
+      "files": [
+        "librepcb-2.1.1-source.zip.asc"
+      ]
     },
     {
       "name": "librepcb-bin-angelsen",
       "version": "2.1.1-2",
       "description": "A free EDA software to develop printed circuit boards (prebuilt binary, includes librepcb-cli)",
       "url": "https://librepcb.org/",
-      "files": []
+      "files": [
+        "librepcb-2.1.1-linux-x86_64.tar.gz.asc",
+        "org.librepcb.LibrePCB-archive.svg",
+        "org.librepcb.LibrePCB-file.svg",
+        "org.librepcb.LibrePCB-project.svg",
+        "org.librepcb.LibrePCB.desktop",
+        "org.librepcb.LibrePCB.metainfo.xml",
+        "org.librepcb.LibrePCB.png",
+        "org.librepcb.LibrePCB.svg",
+        "org.librepcb.LibrePCB.xml"
+      ]
     },
     {
       "name": "opencode-angelsen",
