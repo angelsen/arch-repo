@@ -12,12 +12,12 @@ depends=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicat
 provides=('rustdesk')
 conflicts=('rustdesk' 'rustdesk-bin')
 install=${pkgname}.install
-source=("https://github.com/rustdesk/rustdesk/releases/download/${pkgver}/${_pkgname}-${pkgver}-0-x86_64.pkg.tar.zst")
+source=("https://github.com/rustdesk/rustdesk/releases/download/${pkgver}/${_pkgname}-${pkgver}-0-${CARCH}.pkg.tar.zst")
 sha256sums=('548397cb46c6d173de5ee6463963be6df01c72c13a62465c22631a07d49aac7d')
 
 package() {
     # Extract the upstream package, excluding metadata files
-    tar -xf "${srcdir}/${_pkgname}-${pkgver}-0-x86_64.pkg.tar.zst" -C "${pkgdir}" --exclude='.BUILDINFO' --exclude='.INSTALL' --exclude='.MTREE' --exclude='.PKGINFO'
+    tar -xf "${srcdir}/${_pkgname}-${pkgver}-0-${CARCH}.pkg.tar.zst" -C "${pkgdir}" --exclude='.BUILDINFO' --exclude='.INSTALL' --exclude='.MTREE' --exclude='.PKGINFO'
 
     # The upstream package already contains everything in the correct locations
     # /usr/bin/rustdesk

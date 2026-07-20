@@ -12,14 +12,14 @@ optdepends=('qt6-imageformats: additional image format support')
 provides=('librepcb' 'librepcb-cli')
 conflicts=('librepcb' 'librepcb-cli')
 options=('!strip')
-source=("https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-x86_64.tar.gz"
-        "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-x86_64.tar.gz.asc")
+source=("https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-${CARCH}.tar.gz"
+        "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-${CARCH}.tar.gz.asc")
 sha256sums=('d4165a0822c3e76bf15de5bd06e5a2070766458654a4e0a9f9637c9089fd8f03'
             'SKIP')
 validpgpkeys=('D6F9AF572228C5BCD6B538407EF3061F5C8D5E25')
 
 package() {
-    local _src="librepcb-${pkgver}-linux-x86_64"
+    local _src="librepcb-${pkgver}-linux-${CARCH}"
 
     # Runtime tree (bin/lib/plugins/translations + LibrePCB's own share/librepcb
     # data) stays together under /opt since qt.conf resolves plugins/translations
