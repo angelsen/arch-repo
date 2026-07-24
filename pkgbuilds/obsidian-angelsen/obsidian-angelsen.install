@@ -1,0 +1,13 @@
+post_install() {
+    # Electron's sandbox needs either unprivileged user namespaces (default on
+    # Arch) or a setuid-root chrome-sandbox helper. Only grant setuid when
+    # user namespaces aren't usable, since a setuid binary is a bigger attack
+    # surface than we need on a stock kernel.
+    if ! { [[ -L /proc/self/ns/user ]] && unshare --user true 2>/dev/null; }; then
+        chmod 4755 '/opt/Obsidian/chrome-sandbox' || true
+    fi
+}
+
+post_upgrade() {
+    post_install
+}
