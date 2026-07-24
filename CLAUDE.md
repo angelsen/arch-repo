@@ -81,6 +81,18 @@ For npm-based packages, these namcap warnings are expected and acceptable:
 - Implicitly satisfied deps (glibc, bash, libgcc) — transitive, no need to list
 - Cross-directory hardlinks from npm (e.g. esbuild)
 
+For any `/opt`-installed binary package, `ELF files outside of a valid path ('opt/')` and "Unused shared library" warnings are also expected — namcap's own FHS rule whitelists `opt/`, and prebuilt/vendored binaries routinely link libs they don't use on every code path.
+
+### License Identifiers
+
+For proprietary/non-SPDX upstream licenses (EULAs, "all rights reserved"), use `license=('LicenseRef-Name')`, not `license=('custom:Name')`. namcap validates `license` as a strict SPDX expression — `custom:X` fails that parse, `LicenseRef-X` is the SPDX-sanctioned escape hatch for non-standard licenses.
+
+`LicenseRef-X` also requires an actual license file installed under `/usr/share/licenses/${pkgname}/` (namcap flags `LicenseRef-X` with zero license files as an error). If upstream doesn't ship one directly, source it from wherever it's actually published (npm package, GitHub, EULA page) as an extra `source=()` entry.
+
+### `.install` Scriptlets
+
+Don't call `update-desktop-database`, `update-mime-database`, or `gtk-update-icon-cache` from `post_install`/`post_upgrade` — these are handled automatically by pacman hooks (shipped by `desktop-file-utils`, `hicolor-icon-theme` etc.) on any package that touches `usr/share/applications/*.desktop`, `usr/share/mime/packages/*.xml`, or icon dirs. Only put genuinely package-specific logic in `.install` (e.g. conditional `chrome-sandbox` permissions, see below).
+
 ## Packaging Patterns
 
 ### npm CLI Packages
@@ -108,3 +120,11 @@ Follow `claude-code-angelsen`:
 
 - Source the binary directly with a versioned filename, use `noextract`
 - Install with `install -Dm755` to the appropriate location
+
+### Electron/Chromium Apps
+
+Follow `obsidian-angelsen` (deb-repackaged; the same applies to AppImage/tar.gz-sourced Electron apps):
+
+- The bundled `chrome-sandbox` helper needs either unprivileged user namespaces (default on Arch) or setuid root — not both, and not neither. In `post_install`/`post_upgrade`, only `chmod 4755` it when `unshare --user true` fails; otherwise leave it at the shipped `0755`. Unconditional setuid widens the attack surface unnecessarily; unconditional non-setuid breaks the sandbox on kernels/configs without unprivileged userns.
+- Don't bake `--no-sandbox` into a launcher script as a workaround — it's a real sandbox that should stay on when available.
+- A `/opt`-installed Electron app usually needs its own `/usr/bin` launcher wrapper (not just a symlink) if you want to support user-supplied flags via a config file (see `google-chrome-stable-angelsen.sh` / `obsidian-angelsen.sh` for the pattern).
