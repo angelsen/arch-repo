@@ -12,7 +12,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.219-1",
+      "version": "2.1.219-2",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -28,7 +28,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "150.0.7871.186-1",
+      "version": "150.0.7871.186-2",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -84,7 +84,10 @@
       "version": "1.12.7-1",
       "description": "A powerful knowledge base that works on top of a local folder of plain text Markdown files",
       "url": "https://obsidian.md",
-      "files": []
+      "files": [
+        "obsidian-angelsen.install",
+        "obsidian-angelsen.sh"
+      ]
     },
     {
       "name": "opencode-angelsen",

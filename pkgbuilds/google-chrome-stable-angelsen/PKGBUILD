@@ -3,11 +3,11 @@
 pkgname=google-chrome-stable-angelsen
 _pkgname=google-chrome-stable
 pkgver=150.0.7871.186
-pkgrel=1
+pkgrel=2
 pkgdesc="Web browser from Google (Stable Channel)"
 arch=('x86_64')
 url="https://www.google.com/chrome"
-license=('custom:chrome')
+license=('LicenseRef-chrome')
 depends=('alsa-lib' 'gtk3' 'libcups' 'libxss' 'libxtst' 'nss' 'ttf-liberation' 'xdg-utils')
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
     'kdialog: for file dialogs in KDE'

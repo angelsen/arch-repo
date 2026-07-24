@@ -2,13 +2,13 @@
 
 pkgname=claude-code-angelsen
 pkgver=2.1.219
-pkgrel=1
+pkgrel=2
 provides=('claude-code')
 conflicts=('claude-code')
 pkgdesc="An agentic coding tool by Anthropic that lives in your terminal"
 arch=('x86_64')
 url="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview"
-license=('custom:Anthropic')
+license=('LicenseRef-Anthropic')
 options=('!strip')
 optdepends=(
     'git: For git operations'
@@ -18,10 +18,13 @@ optdepends=(
     'tmux: For tmux pane integration'
 )
 install="${pkgname}.install"
-source=("claude-${pkgver}::https://downloads.claude.ai/claude-code-releases/${pkgver}/linux-x64/claude")
+source=("claude-${pkgver}::https://downloads.claude.ai/claude-code-releases/${pkgver}/linux-x64/claude"
+        "LICENSE-${pkgver}.md::https://unpkg.com/@anthropic-ai/claude-code@${pkgver}/LICENSE.md")
 noextract=("claude-${pkgver}")
-sha256sums=('22cfd6f5b3061c0391ba84e9cf8c9deaa37783aac18b004d42ec061e98f00691')
+sha256sums=('22cfd6f5b3061c0391ba84e9cf8c9deaa37783aac18b004d42ec061e98f00691'
+            '8ce94b9478bb9868f9641f818e06cd722fbe55d4c22e2d2ed11971b20146173a')
 
 package() {
     install -Dm755 "${srcdir}/claude-${pkgver}" "${pkgdir}/usr/bin/claude"
+    install -Dm644 "${srcdir}/LICENSE-${pkgver}.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
 }
