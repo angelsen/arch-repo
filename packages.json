@@ -39,8 +39,8 @@
     },
     {
       "name": "higgsfield-cli-angelsen",
-      "version": "0.1.40-1",
-      "description": "Generate images and videos from the terminal using 30+ Higgsfield AI models",
+      "version": "1.1.19-1",
+      "description": "Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models",
       "url": "https://github.com/higgsfield-ai/cli",
       "files": []
     },

@@ -26,6 +26,7 @@ pkgbuilds/**/*.rpm
 # Downloaded raw binaries (noextract sources without extension)
 pkgbuilds/claude-code-angelsen/claude-[0-9]*
 pkgbuilds/claude-code-angelsen/LICENSE-*.md
+pkgbuilds/higgsfield-cli-angelsen/LICENSE
 
 # Makepkg files
 pkgbuilds/**/*.log

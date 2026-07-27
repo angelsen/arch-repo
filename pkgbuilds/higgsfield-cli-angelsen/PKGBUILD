@@ -2,18 +2,21 @@
 
 pkgname=higgsfield-cli-angelsen
 _pkgname=hf
-pkgver=0.1.40
+pkgver=1.1.19
 pkgrel=1
-pkgdesc="Generate images and videos from the terminal using 30+ Higgsfield AI models"
+pkgdesc="Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models"
 arch=('x86_64')
 url="https://github.com/higgsfield-ai/cli"
 license=('MIT')
 provides=('higgsfield-cli' 'higgsfield')
 conflicts=('higgsfield-cli' 'higgsfield')
-source=("${_pkgname}_${pkgver}_linux_amd64.tar.gz::https://github.com/higgsfield-ai/cli/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_amd64.tar.gz")
-sha256sums=('ad954545b23b3f7601943e434c1e2cf65792f803b4995526fbee4b64108f00fa')
+source=("${_pkgname}_${pkgver}_linux_amd64.tar.gz::https://github.com/higgsfield-ai/cli/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_amd64.tar.gz"
+        "LICENSE::https://raw.githubusercontent.com/higgsfield-ai/cli/v${pkgver}/LICENSE")
+sha256sums=('d221fba3c95becad238139ee91f30af2109212aaced9ea190cb6f8dd17aae181'
+            '9da656d6226936542be59478dbf775057dfdeade2629d35e0832108c2b7aecc0')
 
 package() {
     install -Dm755 "${srcdir}/${_pkgname}" "${pkgdir}/usr/bin/higgsfield"
     ln -s higgsfield "${pkgdir}/usr/bin/higgs"
+    install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
