@@ -113,6 +113,7 @@ Follow `google-chrome-stable-angelsen`:
 - Source the `.deb` directly, extract with `bsdtar -xf data.tar.xz -C "$pkgdir/"`
 - Remove Debian-specific files (cron.daily, share/menu)
 - Include custom launcher scripts and EULA as additional source files in the package directory
+- `namcap` errors on missing `qt5-base`/`qt6-base` for `libqt5_shim.so`/`libqt6_shim.so` (Chrome's optional Qt theme-integration shims, dlopen'd only under Qt-based desktops) are expected and acceptable — don't add them to `depends`/`optdepends`; upstream AUR `google-chrome` doesn't either.
 
 ### Standalone Binary Packages
 

@@ -12,7 +12,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.219-2",
+      "version": "2.1.220-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -28,7 +28,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "150.0.7871.186-2",
+      "version": "151.0.7922.71-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -39,7 +39,7 @@
     },
     {
       "name": "higgsfield-cli-angelsen",
-      "version": "1.1.19-1",
+      "version": "1.1.20-1",
       "description": "Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models",
       "url": "https://github.com/higgsfield-ai/cli",
       "files": []
