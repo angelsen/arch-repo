@@ -54,16 +54,35 @@ class ApDev:
             cwd = self.repo_root
         return subprocess.run(cmd, cwd=cwd, **kwargs)
 
+    @staticmethod
+    def local_source_files(sources: List[str]) -> List[str]:
+        """Source entries that ship in the package dir rather than being downloaded."""
+        local = []
+        for entry in sources:
+            # `filename::uri` renames a download, so the uri decides whether the
+            # entry is remote; a bare entry with no protocol is a local file.
+            uri = entry.split("::", 1)[-1]
+            if re.match(r"^[a-z][a-z0-9+.-]*://", uri):
+                continue
+            local.append(uri)
+        return local
+
     def parse_pkgbuild(self, pkgbuild_path: Path) -> Optional[Dict]:
         """Extract package info from PKGBUILD"""
         if not pkgbuild_path.exists():
             return None
 
         try:
-            # Source the PKGBUILD and extract variables
+            # Source the PKGBUILD and extract variables. The scalar metadata
+            # goes on one pipe-delimited line; source=() follows in its own
+            # newline-delimited section so array entries survive intact.
             cmd = f'''
                 source "{pkgbuild_path}" 2>/dev/null
                 echo "${{pkgname}}|${{pkgver}}|${{pkgrel}}|${{pkgdesc}}|${{url}}"
+                echo "---SOURCE---"
+                printf '%s\\n' "${{source[@]}}"
+                echo "---INSTALL---"
+                echo "${{install}}"
             '''
             result = subprocess.run(
                 ["bash", "-c", cmd],
@@ -75,7 +94,10 @@ class ApDev:
             if result.returncode != 0:
                 return None
 
-            parts = result.stdout.strip().split("|")
+            meta, _, rest = result.stdout.partition("\n---SOURCE---\n")
+            sources_raw, _, install_raw = rest.partition("\n---INSTALL---\n")
+
+            parts = meta.strip().split("|")
             if len(parts) < 4:
                 return None
 
@@ -96,6 +118,8 @@ class ApDev:
                 "description": parts[3],
                 "url": parts[4] if len(parts) > 4 else "",
                 "files": files,
+                "sources": [s for s in sources_raw.split("\n") if s],
+                "install": install_raw.strip(),
             }
         except Exception as e:
             error(f"Failed to parse {pkgbuild_path}: {e}")
@@ -185,7 +209,15 @@ package() {{
 
             pkg_info = self.parse_pkgbuild(pkgbuild)
             if pkg_info:
-                packages.append(pkg_info)
+                # Publish only the fields ap consumes. parse_pkgbuild also
+                # returns source=()/install= data, which exists for ap-dev check
+                # and has no business in the published manifest.
+                packages.append(
+                    {
+                        key: pkg_info[key]
+                        for key in ("name", "version", "description", "url", "files")
+                    }
+                )
                 info(f"Found: {pkg_info['name']} {pkg_info['version']}")
 
                 # Generate .SRCINFO for each package
@@ -295,17 +327,43 @@ package() {{
                 errors += 1
                 continue
 
+            pkg_errors = 0
+
             # Check for required fields
             if not pkg_info.get("name"):
                 error(f"{pkg_dir.name}: Missing pkgname")
-                errors += 1
+                pkg_errors += 1
             if not pkg_info.get("version"):
                 error(f"{pkg_dir.name}: Missing version")
-                errors += 1
+                pkg_errors += 1
             if not pkg_info.get("description"):
                 warning(f"{pkg_dir.name}: Missing description")
 
-            if errors == 0:
+            # Every local source file and the install scriptlet has to be
+            # tracked by git, because packages.json builds each package's
+            # download list from `git ls-files`. An untracked file builds fine
+            # here and then breaks `ap install` for everyone else.
+            tracked = set(pkg_info.get("files", []))
+            required = self.local_source_files(pkg_info.get("sources", []))
+            if pkg_info.get("install"):
+                required.append(pkg_info["install"])
+
+            for name in sorted(set(required)):
+                if name in tracked:
+                    continue
+                if (pkg_dir / name).exists():
+                    error(
+                        f"{pkg_dir.name}: '{name}' is used by the PKGBUILD but "
+                        f"untracked; run 'git add' or ap install cannot fetch it"
+                    )
+                else:
+                    error(
+                        f"{pkg_dir.name}: '{name}' is used by the PKGBUILD but missing"
+                    )
+                pkg_errors += 1
+
+            errors += pkg_errors
+            if pkg_errors == 0:
                 success(f"{pkg_dir.name}: OK")
 
         if errors > 0:
