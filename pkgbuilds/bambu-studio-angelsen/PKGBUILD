@@ -3,7 +3,7 @@
 pkgname=bambu-studio-angelsen
 pkgver=02.07.01.62
 _buildstamp=20260616195227
-pkgrel=1
+pkgrel=2
 pkgdesc="Cutting-edge slicing software for BambuLab 3D printers"
 arch=('x86_64')
 url="https://github.com/bambulab/BambuStudio"

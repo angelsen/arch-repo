@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "bambu-studio-angelsen",
-      "version": "02.07.01.62-1",
+      "version": "02.07.01.62-2",
       "description": "Cutting-edge slicing software for BambuLab 3D printers",
       "url": "https://github.com/bambulab/BambuStudio",
       "files": [
