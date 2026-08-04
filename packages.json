@@ -6,6 +6,8 @@
       "description": "Cutting-edge slicing software for BambuLab 3D printers",
       "url": "https://github.com/bambulab/BambuStudio",
       "files": [
+        "bambu-studio-angelsen.install",
+        "bambu-studio-install-network-plugin.sh",
         "bambu-studio.desktop",
         "bambu-studio.sh"
       ]

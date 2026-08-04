@@ -234,12 +234,17 @@ package() {{
         """Update packages.json, commit, and push"""
         info("Publishing repository...")
 
-        # First update packages.json
-        if self.cmd_update() != 0:
-            return 1
-
-        # Git add, commit, push
         try:
+            # Stage first: packages.json builds each package's file list from
+            # `git ls-files`, so a newly added source file must be in the index
+            # before cmd_update() runs or it is silently left out of the publish
+            # that introduces it.
+            self.run_git(["add", "-A"], check=True)
+
+            if self.cmd_update() != 0:
+                return 1
+
+            # Pick up packages.json itself, which cmd_update() just rewrote.
             self.run_git(["add", "-A"], check=True)
 
             # Check if there are changes
