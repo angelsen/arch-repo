@@ -25,14 +25,19 @@ depends=(
 	'wayland'
 	'webkit2gtk-4.1'
 )
+optdepends=('curl: fetch the network plugin via bambu-studio-install-network-plugin'
+	'jq: fetch the network plugin via bambu-studio-install-network-plugin')
 options=('!strip' '!debug')
+install="${pkgname}.install"
 source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudio/releases/download/v${pkgver}/BambuStudio_ubuntu24.04-v${pkgver}-${_buildstamp}.AppImage"
 	'bambu-studio.sh'
-	'bambu-studio.desktop')
+	'bambu-studio.desktop'
+	'bambu-studio-install-network-plugin.sh')
 noextract=("bambu-studio-${pkgver}.AppImage")
 sha256sums=('fa98b608532dfbbbb2b0931483aac41e57fb19c175a2cc7bd7d528d5e0fbb287'
-	'SKIP'
-	'SKIP')
+            'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
+            '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
+            'c7c134b6b3d2c84d7913e8557032308de8e3170814191dcda381a5d67c2d9799')
 
 prepare() {
 	chmod +x "bambu-studio-${pkgver}.AppImage"
@@ -51,6 +56,11 @@ package() {
 
 	# Wrapper script
 	install -Dm755 bambu-studio.sh "${pkgdir}/usr/bin/bambu-studio"
+
+	# Helper for the proprietary network plugin, which upstream downloads at
+	# runtime and which therefore cannot ship inside this package.
+	install -Dm755 bambu-studio-install-network-plugin.sh \
+		"${pkgdir}/usr/bin/bambu-studio-install-network-plugin"
 
 	# Desktop entry
 	install -Dm644 bambu-studio.desktop "${pkgdir}/usr/share/applications/bambu-studio.desktop"

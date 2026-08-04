@@ -1,0 +1,25 @@
+post_install() {
+    cat <<'EOF'
+==> Logging in and reaching printers needs Bambu Lab's proprietary network
+    plugin. It is not redistributable, so Bambu Studio downloads it on first
+    login instead of shipping in this package.
+
+    If the app reports "Please install the network plugin before logging in",
+    its own download failed. Install it manually with:
+
+        bambu-studio-install-network-plugin
+
+    (needs the curl and jq optdepends)
+EOF
+}
+
+post_upgrade() {
+    # The plugin is version-matched against the app on the first three version
+    # components, so a minor/major bump invalidates the installed copy while a
+    # pkgrel-only bump does not.
+    cat <<'EOF'
+==> If login stops working after this upgrade, refresh the network plugin:
+
+        bambu-studio-install-network-plugin
+EOF
+}
