@@ -31,11 +31,13 @@ Response  Binary   Events     Chunks
 ## Resource Locations
 
 ### Captured Data
+
 - **Kiro API flows**: `./kiro-flows.mitm` (binary mitmproxy format)
 - **Detailed text export**: `./kiro-flows-detailed.txt` (24,736 lines)
 - **API comparison**: `./api-comparison.md` (542 lines)
 
 ### Reference Implementations
+
 - **Claude Code OAuth**: `/home/fredrik/Projects/Python/project-autumn-25/crush-claude/`
   - OAuth flow: `_research/oauth/`
   - Proxy example: `_research/proxy/proxy-api.js`
@@ -43,6 +45,7 @@ Response  Binary   Events     Chunks
   - README: `README.md`
 
 ### Tools & Scripts
+
 - **Hook script**: `./hook-fetch.js` (fetch interceptor)
 - **Launch wrapper**: `./kiro-mitm.sh` (Kiro with mitmproxy)
 - **Test decoder**: REPL session (proven EventStream decode)
@@ -54,6 +57,7 @@ Response  Binary   Events     Chunks
 ### 1. Request Translation: Kiro → Anthropic
 
 #### Input: Kiro AWS Bedrock Format
+
 ```json
 {
   "conversationState": {
@@ -77,6 +81,7 @@ Response  Binary   Events     Chunks
 ```
 
 #### Output: Anthropic Messages API Format
+
 ```json
 {
   "model": "claude-sonnet-4-5-20250929",
@@ -94,6 +99,7 @@ Response  Binary   Events     Chunks
 ```
 
 #### Translation Steps
+
 1. Extract `history` + `currentMessage` → flatten to `messages` array
 2. Convert `userInputMessage` → `{role: "user"}`
 3. Convert `assistantResponseMessage` → `{role: "assistant"}`
@@ -105,6 +111,7 @@ Response  Binary   Events     Chunks
 ### 2. Response Translation: Anthropic → Kiro
 
 #### Input: Anthropic SSE Streaming
+
 ```
 event: message_start
 data: {"type":"message_start","message":{"id":"msg_..."}}
@@ -129,6 +136,7 @@ data: {"type":"message_stop"}
 ```
 
 #### Output: AWS EventStream Binary
+
 ```python
 # For each text delta:
 {
@@ -152,6 +160,7 @@ data: {"type":"message_stop"}
 ```
 
 #### Translation Steps
+
 1. Parse SSE events from Anthropic response
 2. Extract `content_block_delta` → get `delta.text`
 3. Encode each chunk as AWS EventStream message:
@@ -207,6 +216,7 @@ addons = [KiroAnthropicProxy()]
 ```
 
 **Functions to implement**:
+
 - `translate_request(kiro_req)` → anthropic_req
 - `call_anthropic_api(req)` → response
 - `translate_response(anthropic_resp)` → AWS binary
@@ -281,10 +291,12 @@ def load_oauth_token():
 ## Endpoints to Intercept
 
 ### Primary Endpoint
+
 - `POST https://codewhisperer.us-east-1.amazonaws.com/generateAssistantResponse`
   → Proxy to `POST https://api.anthropic.com/v1/messages`
 
 ### Stub Endpoints (Return Mock Data)
+
 - `GET https://codewhisperer.us-east-1.amazonaws.com/ListAvailableModels`
   → Return Pro tier models
 - `GET https://codewhisperer.us-east-1.amazonaws.com/getUsageLimits`
@@ -295,12 +307,14 @@ def load_oauth_token():
 ## Configuration
 
 ### Required Environment Variables
+
 ```bash
 ANTHROPIC_API_KEY=sk-ant-api...  # Or load from OAuth
 ANTHROPIC_OAUTH_TOKEN=sk-ant-oat01-...  # From Claude Code
 ```
 
 ### Launch Command
+
 ```bash
 uv run mitmproxy \
   -s kiro-anthropic-addon.py \
@@ -309,6 +323,7 @@ uv run mitmproxy \
 ```
 
 ### Kiro Launch (with proxy)
+
 ```bash
 HTTP_PROXY=http://127.0.0.1:8080 \
 HTTPS_PROXY=http://127.0.0.1:8080 \
@@ -321,6 +336,7 @@ kiro
 ## Dependencies
 
 Add to `pyproject.toml`:
+
 ```toml
 dependencies = [
     "mitmproxy>=12.1.2",
@@ -336,19 +352,20 @@ Already installed in `tmp-kiro` project.
 
 ## Model ID Mapping
 
-| Kiro Model ID | Anthropic API Model ID |
-|---------------|------------------------|
-| `claude-sonnet-4.5` | `claude-sonnet-4-5-20250929` |
-| `claude-sonnet-4` | `claude-sonnet-4-20250514` |
-| `claude-opus-4` | `claude-opus-4-20250514` |
-| `auto` | `claude-sonnet-4-5-20250929` (default) |
-| `simple-task` | `claude-3-5-haiku-20241022` (lightweight) |
+| Kiro Model ID       | Anthropic API Model ID                    |
+| ------------------- | ----------------------------------------- |
+| `claude-sonnet-4.5` | `claude-sonnet-4-5-20250929`              |
+| `claude-sonnet-4`   | `claude-sonnet-4-20250514`                |
+| `claude-opus-4`     | `claude-opus-4-20250514`                  |
+| `auto`              | `claude-sonnet-4-5-20250929` (default)    |
+| `simple-task`       | `claude-3-5-haiku-20241022` (lightweight) |
 
 ---
 
 ## Tool Schema Conversion
 
 ### Kiro Format
+
 ```json
 {
   "toolSpecification": {
@@ -366,6 +383,7 @@ Already installed in `tmp-kiro` project.
 ```
 
 ### Anthropic Format
+
 ```json
 {
   "name": "executeBash",
@@ -398,16 +416,19 @@ def tokens_to_credits(input_tokens, output_tokens):
 ## Error Handling
 
 ### Anthropic API Errors
+
 - Map HTTP error codes to AWS format
 - Preserve error messages
 - Return as AWS EventStream error event
 
 ### Token Expiry
+
 - Detect 401 from Anthropic
 - Attempt refresh (if using OAuth)
 - Return meaningful error to Kiro
 
 ### Streaming Failures
+
 - Handle incomplete SSE streams
 - Close AWS EventStream properly
 - Log errors for debugging

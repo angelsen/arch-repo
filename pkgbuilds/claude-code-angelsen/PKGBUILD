@@ -1,7 +1,7 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=claude-code-angelsen
-pkgver=2.1.220
+pkgver=2.1.224
 pkgrel=1
 provides=('claude-code')
 conflicts=('claude-code')
@@ -19,10 +19,10 @@ optdepends=(
 )
 install="${pkgname}.install"
 source=("claude-${pkgver}::https://downloads.claude.ai/claude-code-releases/${pkgver}/linux-x64/claude"
-        "LICENSE-${pkgver}.md::https://unpkg.com/@anthropic-ai/claude-code@${pkgver}/LICENSE.md")
+    "LICENSE-${pkgver}.md::https://unpkg.com/@anthropic-ai/claude-code@${pkgver}/LICENSE.md")
 noextract=("claude-${pkgver}")
-sha256sums=('674f61f20ff306f3100cf9200e4c36c4b70278b5bef2884549819b942a89c863'
-            '8ce94b9478bb9868f9641f818e06cd722fbe55d4c22e2d2ed11971b20146173a')
+sha256sums=('a2b5add7dc4bcd8eaa029f4e8bdac4df7769b4073698db7989d206baf9419c2d'
+    '8ce94b9478bb9868f9641f818e06cd722fbe55d4c22e2d2ed11971b20146173a')
 
 package() {
     install -Dm755 "${srcdir}/claude-${pkgver}" "${pkgdir}/usr/bin/claude"

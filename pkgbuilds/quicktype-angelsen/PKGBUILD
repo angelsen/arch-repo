@@ -34,7 +34,7 @@ package() {
     # Clean up package.json files using jq
     find "${pkgdir}" -type f -name package.json | while read pkgjson; do
         local tmppackage="$(mktemp)"
-        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" >"${tmppackage}"
         mv "${tmppackage}" "${pkgjson}"
         chmod 644 "${pkgjson}"
     done

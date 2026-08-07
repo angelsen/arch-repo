@@ -14,10 +14,10 @@ makedepends=('npm' 'jq')
 provides=('shopify-cli')
 conflicts=('shopify-cli')
 source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz"
-        "LICENSE-${pkgver}::https://raw.githubusercontent.com/Shopify/cli/main/LICENSE")
+    "LICENSE-${pkgver}::https://raw.githubusercontent.com/Shopify/cli/main/LICENSE")
 noextract=("${_pkgname}-${pkgver}.tgz")
 sha256sums=('b6b320b21f5f39b9dfd406d82eab8326bd885f5bd7db7d646529f5aa0066a32c'
-            '40614f57726c0804b64757fcf155ebfb59c9dddfc27cc17c7717e2993571c771')
+    '40614f57726c0804b64757fcf155ebfb59c9dddfc27cc17c7717e2993571c771')
 
 package() {
     local npm_cache="${srcdir}/npm-cache"
@@ -34,7 +34,7 @@ package() {
     # Clean up package.json files using jq
     find "${pkgdir}" -type f -name package.json | while read pkgjson; do
         local tmppackage="$(mktemp)"
-        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" >"${tmppackage}"
         mv "${tmppackage}" "${pkgjson}"
         chmod 644 "${pkgjson}"
     done

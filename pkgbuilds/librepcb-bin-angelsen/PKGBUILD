@@ -13,9 +13,9 @@ provides=('librepcb' 'librepcb-cli')
 conflicts=('librepcb' 'librepcb-cli')
 options=('!strip')
 source=("https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-${CARCH}.tar.gz"
-        "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-${CARCH}.tar.gz.asc")
+    "https://download.librepcb.org/releases/${pkgver}/librepcb-${pkgver}-linux-${CARCH}.tar.gz.asc")
 sha256sums=('d4165a0822c3e76bf15de5bd06e5a2070766458654a4e0a9f9637c9089fd8f03'
-            'SKIP')
+    'SKIP')
 validpgpkeys=('D6F9AF572228C5BCD6B538407EF3061F5C8D5E25')
 
 package() {
@@ -34,7 +34,7 @@ package() {
     # (it's built for AppImage distribution) and unconditionally nags to copy
     # desktop/icon/mime files into ~/.local/share, unaware that this package
     # already installs them system-wide. Disable it at runtime.
-    cat > "${pkgdir}/usr/bin/librepcb" <<'EOF'
+    cat >"${pkgdir}/usr/bin/librepcb" <<'EOF'
 #!/bin/sh
 exec env LIBREPCB_ENABLE_DESKTOP_INTEGRATION=0 /opt/librepcb/bin/librepcb "$@"
 EOF
@@ -45,6 +45,6 @@ EOF
     # into the standard XDG locations instead.
     install -d "${pkgdir}/usr/share"
     cp -a "${_src}/share/applications" "${_src}/share/icons" \
-          "${_src}/share/mime" "${_src}/share/metainfo" \
-          "${pkgdir}/usr/share/"
+        "${_src}/share/mime" "${_src}/share/metainfo" \
+        "${pkgdir}/usr/share/"
 }

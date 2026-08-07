@@ -77,6 +77,7 @@ namcap pkgbuilds/<name>/<name>-<ver>-<rel>-<arch>.pkg.tar.zst
 ```
 
 For npm-based packages, these namcap warnings are expected and acceptable:
+
 - RELRO/PIE/unstripped on upstream prebuilt binaries (we don't compile these)
 - Implicitly satisfied deps (glibc, bash, libgcc) — transitive, no need to list
 - Cross-directory hardlinks from npm (e.g. esbuild)

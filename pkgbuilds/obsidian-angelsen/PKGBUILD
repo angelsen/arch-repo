@@ -14,9 +14,9 @@ conflicts=('obsidian')
 options=('!strip')
 install="${pkgname}.install"
 source=("https://github.com/obsidianmd/obsidian-releases/releases/download/v${pkgver}/obsidian_${pkgver}_amd64.deb"
-        'obsidian-angelsen.sh')
+    'obsidian-angelsen.sh')
 sha256sums=('3644e3ef19bcd23db4d17f7c73311b5245429391a2a48b361da93375f59712b0'
-            'a94e20705d4b67501f225d74f4460b746a258e52aa6bc522aed1e26ac42dbef9')
+    'a94e20705d4b67501f225d74f4460b746a258e52aa6bc522aed1e26ac42dbef9')
 
 package() {
     bsdtar -xf data.tar.xz -C "${pkgdir}/"

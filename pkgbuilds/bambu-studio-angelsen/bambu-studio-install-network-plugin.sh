@@ -32,8 +32,8 @@ fi
 
 version="${1:-}"
 if [[ -z ${version} ]]; then
-    version=$(pacman -Q bambu-studio-angelsen 2>/dev/null | cut -d' ' -f2 | cut -d- -f1) ||
-        die "bambu-studio-angelsen is not installed; pass a version explicitly"
+    version=$(pacman -Q bambu-studio-angelsen 2>/dev/null | cut -d' ' -f2 | cut -d- -f1) \
+        || die "bambu-studio-angelsen is not installed; pass a version explicitly"
 fi
 
 # The API is keyed on the first three version components only. The plugin
@@ -44,8 +44,8 @@ echo "==> Looking up plugin for Bambu Studio ${version} (query ${query})"
 
 # X-BBL-OS-Type is required. Without it the API hands back the Windows zip,
 # which is why the vendor's browser-based instructions only work on Windows.
-url=$(curl -fsS -H 'X-BBL-OS-Type: linux' "${API}?slicer/plugins/cloud=${query}" |
-    jq -r '.resources[] | select(.type == "slicer/plugins/cloud") | .url')
+url=$(curl -fsS -H 'X-BBL-OS-Type: linux' "${API}?slicer/plugins/cloud=${query}" \
+    | jq -r '.resources[] | select(.type == "slicer/plugins/cloud") | .url')
 [[ -n ${url} ]] || die "no Linux plugin published for ${query}"
 
 tmp=$(mktemp -d)

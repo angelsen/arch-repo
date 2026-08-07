@@ -20,29 +20,29 @@ package() {
     # Create temporary npm cache directory
     local npm_cache="${srcdir}/npm-cache"
     mkdir -p "${npm_cache}"
-    
+
     # Install the package globally with npm
     npm install -g --cache "${npm_cache}" --prefix "${pkgdir}/usr" \
         "${srcdir}/${_pkgname}-${pkgver}.tgz"
-    
+
     # Remove npm cache
     rm -rf "${npm_cache}"
-    
+
     # Remove references to $pkgdir and $srcdir
     find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
-    
+
     # Clean up package.json files using jq
     find "${pkgdir}" -type f -name package.json | while read pkgjson; do
         local tmppackage="$(mktemp)"
-        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" > "${tmppackage}"
+        jq '.|=with_entries(select(.key|test("_.+")|not))' "${pkgjson}" >"${tmppackage}"
         mv "${tmppackage}" "${pkgjson}"
         chmod 644 "${pkgjson}"
     done
-    
+
     # Fix npm's permissions
     find "${pkgdir}/usr" -type d -exec chmod 755 {} +
     find "${pkgdir}/usr" -type f -exec chmod 644 {} +
-    
+
     # Make the main executable actually executable
     chmod 755 "${pkgdir}/usr/lib/node_modules/${_pkgname}/dist/bin/orval.js"
 
@@ -58,7 +58,7 @@ package() {
     elif [[ -f "${pkgdir}/usr/bin/orval" ]]; then
         chmod 755 "${pkgdir}/usr/bin/orval"
     fi
-    
+
     # Install license file if it exists (orval doesn't include one in npm package)
     # The package.json shows MIT license
     if [[ -f "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" ]]; then

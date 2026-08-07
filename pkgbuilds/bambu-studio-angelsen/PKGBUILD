@@ -11,60 +11,60 @@ license=('AGPL-3.0-only')
 provides=('bambu-studio')
 conflicts=('bambu-studio' 'bambustudio-bin' 'bambustudio-git' 'bambustudio-appimage' 'bambustudio-nvidia-bin')
 depends=(
-	'cairo'
-	'dbus'
-	'fontconfig'
-	'gdk-pixbuf2'
-	'glib2'
-	'gst-plugins-base-libs'
-	'gstreamer'
-	'gtk3'
-	'libx11'
-	'mesa'
-	'pango'
-	'wayland'
-	'webkit2gtk-4.1'
+    'cairo'
+    'dbus'
+    'fontconfig'
+    'gdk-pixbuf2'
+    'glib2'
+    'gst-plugins-base-libs'
+    'gstreamer'
+    'gtk3'
+    'libx11'
+    'mesa'
+    'pango'
+    'wayland'
+    'webkit2gtk-4.1'
 )
 optdepends=('curl: fetch the network plugin via bambu-studio-install-network-plugin'
-	'jq: fetch the network plugin via bambu-studio-install-network-plugin')
+    'jq: fetch the network plugin via bambu-studio-install-network-plugin')
 options=('!strip' '!debug')
 install="${pkgname}.install"
 source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudio/releases/download/v${pkgver}/BambuStudio_ubuntu24.04-v${pkgver}-${_buildstamp}.AppImage"
-	'bambu-studio.sh'
-	'bambu-studio.desktop'
-	'bambu-studio-install-network-plugin.sh')
+    'bambu-studio.sh'
+    'bambu-studio.desktop'
+    'bambu-studio-install-network-plugin.sh')
 noextract=("bambu-studio-${pkgver}.AppImage")
 sha256sums=('fa98b608532dfbbbb2b0931483aac41e57fb19c175a2cc7bd7d528d5e0fbb287'
-            'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
-            '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
-            'c7c134b6b3d2c84d7913e8557032308de8e3170814191dcda381a5d67c2d9799')
+    'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
+    '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
+    'c7c134b6b3d2c84d7913e8557032308de8e3170814191dcda381a5d67c2d9799')
 
 prepare() {
-	chmod +x "bambu-studio-${pkgver}.AppImage"
-	"./bambu-studio-${pkgver}.AppImage" --appimage-extract
+    chmod +x "bambu-studio-${pkgver}.AppImage"
+    "./bambu-studio-${pkgver}.AppImage" --appimage-extract
 }
 
 package() {
-	# Main application binary
-	install -Dm755 squashfs-root/bin/bambu-studio "${pkgdir}/opt/bambu-studio/bin/bambu-studio"
+    # Main application binary
+    install -Dm755 squashfs-root/bin/bambu-studio "${pkgdir}/opt/bambu-studio/bin/bambu-studio"
 
-	# Bundled ffmpeg libs (not available at matching soversions in Arch repos)
-	cp -a squashfs-root/bin/lib*.so* "${pkgdir}/opt/bambu-studio/bin/"
+    # Bundled ffmpeg libs (not available at matching soversions in Arch repos)
+    cp -a squashfs-root/bin/lib*.so* "${pkgdir}/opt/bambu-studio/bin/"
 
-	# Resources (profiles, shaders, fonts, i18n, etc.)
-	cp -r squashfs-root/resources "${pkgdir}/opt/bambu-studio/"
+    # Resources (profiles, shaders, fonts, i18n, etc.)
+    cp -r squashfs-root/resources "${pkgdir}/opt/bambu-studio/"
 
-	# Wrapper script
-	install -Dm755 bambu-studio.sh "${pkgdir}/usr/bin/bambu-studio"
+    # Wrapper script
+    install -Dm755 bambu-studio.sh "${pkgdir}/usr/bin/bambu-studio"
 
-	# Helper for the proprietary network plugin, which upstream downloads at
-	# runtime and which therefore cannot ship inside this package.
-	install -Dm755 bambu-studio-install-network-plugin.sh \
-		"${pkgdir}/usr/bin/bambu-studio-install-network-plugin"
+    # Helper for the proprietary network plugin, which upstream downloads at
+    # runtime and which therefore cannot ship inside this package.
+    install -Dm755 bambu-studio-install-network-plugin.sh \
+        "${pkgdir}/usr/bin/bambu-studio-install-network-plugin"
 
-	# Desktop entry
-	install -Dm644 bambu-studio.desktop "${pkgdir}/usr/share/applications/bambu-studio.desktop"
+    # Desktop entry
+    install -Dm644 bambu-studio.desktop "${pkgdir}/usr/share/applications/bambu-studio.desktop"
 
-	# Icon
-	install -Dm644 squashfs-root/BambuStudio.png "${pkgdir}/usr/share/icons/hicolor/192x192/apps/bambu-studio.png"
+    # Icon
+    install -Dm644 squashfs-root/BambuStudio.png "${pkgdir}/usr/share/icons/hicolor/192x192/apps/bambu-studio.png"
 }

@@ -11,9 +11,9 @@ license=('MIT')
 provides=('higgsfield-cli' 'higgsfield')
 conflicts=('higgsfield-cli' 'higgsfield')
 source=("${_pkgname}_${pkgver}_linux_amd64.tar.gz::https://github.com/higgsfield-ai/cli/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_amd64.tar.gz"
-        "LICENSE::https://raw.githubusercontent.com/higgsfield-ai/cli/v${pkgver}/LICENSE")
+    "LICENSE::https://raw.githubusercontent.com/higgsfield-ai/cli/v${pkgver}/LICENSE")
 sha256sums=('316c0b5e64da575af478ebf518598eefc900d34dac5ce568c24de6fce04406d9'
-            '9da656d6226936542be59478dbf775057dfdeade2629d35e0832108c2b7aecc0')
+    '9da656d6226936542be59478dbf775057dfdeade2629d35e0832108c2b7aecc0')
 
 package() {
     install -Dm755 "${srcdir}/${_pkgname}" "${pkgdir}/usr/bin/higgsfield"
