@@ -50,12 +50,18 @@ lint-python:
 # Shell script linting
 lint-shell:
 	@echo "→ Linting shell scripts..."
-	@shellcheck ap setup.sh || true
+	@shellcheck ap setup.sh
 	@echo "→ Checking PKGBUILDs with namcap..."
 	@echo "  Note: 'Too many sha256sums' warnings are expected for dynamic sources"
+# namcap keeps its '|| true': whole categories of its warnings are expected here
+# (RELRO/PIE on upstream prebuilts, ELF outside opt/, unused shared libs), so
+# failing on them would leave lint permanently red. See CLAUDE.md.
 	@find pkgbuilds -type f -name "PKGBUILD" -exec namcap {} \; || true
-	@find pkgbuilds -type f -name "*.install" -exec shellcheck {} \; || true
-	@find pkgbuilds -type f -name "*.sh" -exec shellcheck {} \; || true
+# '-exec ... +' rather than '\;' is load-bearing, not a batching tweak: with '\;'
+# find returns 0 no matter how the command exited, so shellcheck failures would
+# be silently discarded and this lint could never fail.
+	@find pkgbuilds -type f -name "*.install" -exec shellcheck {} +
+	@find pkgbuilds -type f -name "*.sh" -exec shellcheck {} +
 
 # JSON validation
 lint-json:
