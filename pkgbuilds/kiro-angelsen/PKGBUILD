@@ -2,7 +2,7 @@
 
 pkgname=kiro-angelsen
 pkgver=202510022241
-pkgrel=1
+pkgrel=2
 pkgdesc="AI IDE for prototype to production by AWS"
 arch=('x86_64')
 url="https://kiro.aws"

@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "bambu-studio-angelsen",
-      "version": "02.07.01.62-2",
+      "version": "02.07.01.62-3",
       "description": "Cutting-edge slicing software for BambuLab 3D printers",
       "url": "https://github.com/bambulab/BambuStudio",
       "files": [
@@ -48,7 +48,7 @@
     },
     {
       "name": "kiro-angelsen",
-      "version": "202510022241-1",
+      "version": "202510022241-2",
       "description": "AI IDE for prototype to production by AWS",
       "url": "https://kiro.aws",
       "files": [
@@ -83,7 +83,7 @@
     },
     {
       "name": "obsidian-angelsen",
-      "version": "1.12.7-1",
+      "version": "1.12.7-2",
       "description": "A powerful knowledge base that works on top of a local folder of plain text Markdown files",
       "url": "https://obsidian.md",
       "files": [
@@ -114,7 +114,7 @@
     },
     {
       "name": "rustdesk-bin-angelsen",
-      "version": "1.4.4-1",
+      "version": "1.4.4-2",
       "description": "Remote desktop software, the open source TeamViewer alternative",
       "url": "https://rustdesk.com",
       "files": [

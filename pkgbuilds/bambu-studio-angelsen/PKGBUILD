@@ -3,7 +3,7 @@
 pkgname=bambu-studio-angelsen
 pkgver=02.07.01.62
 _buildstamp=20260616195227
-pkgrel=2
+pkgrel=3
 pkgdesc="Cutting-edge slicing software for BambuLab 3D printers"
 arch=('x86_64')
 url="https://github.com/bambulab/BambuStudio"
@@ -35,9 +35,9 @@ source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudi
     'bambu-studio-install-network-plugin.sh')
 noextract=("bambu-studio-${pkgver}.AppImage")
 sha256sums=('fa98b608532dfbbbb2b0931483aac41e57fb19c175a2cc7bd7d528d5e0fbb287'
-    'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
-    '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
-    'c7c134b6b3d2c84d7913e8557032308de8e3170814191dcda381a5d67c2d9799')
+            'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
+            '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
+            '2a878556c47bfdb89ba85381c12fb6b126838ca86e9029caef204346db7a473c')
 
 prepare() {
     chmod +x "bambu-studio-${pkgver}.AppImage"
