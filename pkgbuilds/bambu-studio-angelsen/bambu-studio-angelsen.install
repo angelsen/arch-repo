@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 post_install() {
     cat <<'EOF'
 ==> Logging in and reaching printers needs Bambu Lab's proprietary network

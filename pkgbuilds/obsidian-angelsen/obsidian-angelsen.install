@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 post_install() {
     # Electron's sandbox needs either unprivileged user namespaces (default on
     # Arch) or a setuid-root chrome-sandbox helper. Only grant setuid when

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 post_install() {
     cp /usr/share/rustdesk/files/rustdesk.service /etc/systemd/system/rustdesk.service
     cp /usr/share/rustdesk/files/rustdesk.desktop /usr/share/applications/
