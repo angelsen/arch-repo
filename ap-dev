@@ -102,6 +102,10 @@ class ApDev:
             # goes on one pipe-delimited line; source=() follows in its own
             # newline-delimited section so array entries survive intact.
             cmd = f'''
+                # makepkg.conf first: PKGBUILDs interpolate ${{CARCH}} into source
+                # URLs, and without it those filenames come out malformed.
+                [ -r /etc/makepkg.conf ] && source /etc/makepkg.conf 2>/dev/null
+                [ -r "$HOME/.makepkg.conf" ] && source "$HOME/.makepkg.conf" 2>/dev/null
                 source "{pkgbuild_path}" 2>/dev/null
                 echo "${{pkgname}}|${{pkgver}}|${{pkgrel}}|${{pkgdesc}}|${{url}}"
                 echo "---SOURCE---"
@@ -466,7 +470,50 @@ package() {{
             success("All packages OK")
             return 0
 
-    def cmd_clean(self):
+    @staticmethod
+    def source_filename(entry: str) -> str:
+        """The on-disk name makepkg gives a source entry."""
+        if "::" in entry:
+            return entry.split("::", 1)[0]
+        # Strip a VCS fragment or query before taking the basename, so
+        # `...repo.tar.gz#tag=v1` doesn't keep the fragment in the name.
+        uri = entry.split("#", 1)[0].split("?", 1)[0]
+        return uri.rstrip("/").rsplit("/", 1)[-1]
+
+    def clean_stale_sources(self, pkg_dir: Path) -> int:
+        """Delete downloads left behind by previous versions of a package.
+
+        Whatever the current source=() names is kept, so the next build still
+        reuses it -- only downloads from older pkgvers go. Tracked files are
+        never touched: if git knows about it, it is repo content, not a
+        download. Dotfiles are skipped too, which is what protects the
+        generated (and gitignored) .SRCINFO.
+        """
+        pkgbuild = pkg_dir / "PKGBUILD"
+        if not pkgbuild.exists():
+            return 0
+        pkg_info = self.parse_pkgbuild(pkgbuild)
+        if not pkg_info:
+            warning(f"{pkg_dir.name}: could not parse PKGBUILD, skipping sources")
+            return 0
+
+        keep = {self.source_filename(s) for s in pkg_info.get("sources", [])}
+        keep.add("PKGBUILD")
+        keep.update(pkg_info.get("files", []))
+
+        removed = 0
+        for item in sorted(pkg_dir.iterdir()):
+            if not item.is_file() or item.name.startswith("."):
+                continue
+            if item.name in keep:
+                continue
+            size_mb = item.stat().st_size / 1024 / 1024
+            item.unlink()
+            info(f"Removed stale source: {pkg_dir.name}/{item.name} ({size_mb:.0f} MB)")
+            removed += 1
+        return removed
+
+    def cmd_clean(self, clean_sources: bool = False):
         """Remove all build artifacts"""
         info("Cleaning build artifacts...")
         patterns = ["*.pkg.tar.zst", "*.pkg.tar.xz", "*.log", "pkg", "src", "*.bak"]
@@ -485,6 +532,12 @@ package() {{
                         item.unlink()
                         info(f"Removed file: {item}")
                     cleaned += 1
+
+            # Sources are pruned after the patterns above, so a source that is
+            # itself a *.pkg.tar.zst (rustdesk ships one upstream) is already
+            # gone and isn't double-counted here.
+            if clean_sources:
+                cleaned += self.clean_stale_sources(pkg_dir)
 
         success(f"Cleaned {cleaned} items")
         return 0
@@ -578,7 +631,12 @@ def main():
     subparsers.add_parser("check", help="Validate all PKGBUILDs")
 
     # clean command
-    subparsers.add_parser("clean", help="Remove all build artifacts")
+    clean_parser = subparsers.add_parser("clean", help="Remove all build artifacts")
+    clean_parser.add_argument(
+        "--sources",
+        action="store_true",
+        help="also delete downloads left over from older versions",
+    )
 
     # list command
     subparsers.add_parser("list", help="List all packages")
@@ -608,7 +666,7 @@ def main():
     elif args.command == "check":
         return ap_dev.cmd_check()
     elif args.command == "clean":
-        return ap_dev.cmd_clean()
+        return ap_dev.cmd_clean(args.sources)
     elif args.command == "list":
         return ap_dev.cmd_list()
     elif args.command == "updpkgsums":
