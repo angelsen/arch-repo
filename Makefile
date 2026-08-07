@@ -1,5 +1,10 @@
 .PHONY: all format lint check format-python format-shell format-web lint-python lint-shell lint-json clean help
 
+# find(1) prefix that skips makepkg's pkg/ and src/ working directories. Use as
+# `find pkgbuilds $(BUILD_DIRS) -o <real predicates>` -- the -prune returns true
+# for those dirs so the -o branch never runs on anything inside them.
+BUILD_DIRS := \( -name pkg -o -name src \) -prune
+
 # Default target
 all: format lint
 
@@ -34,7 +39,10 @@ format-python:
 format-shell:
 	@echo "→ Formatting shell scripts..."
 	@shfmt -w -i 4 -bn -ci ap setup.sh
-	@find pkgbuilds -type f \( -name "PKGBUILD" -o -name "*.install" -o -name "*.sh" \) \
+# Prune makepkg's working dirs. They hold extracted upstream trees -- Kiro alone
+# vendors a pile of VS Code extension scripts -- which are not ours to rewrite.
+	@find pkgbuilds $(BUILD_DIRS) -o -type f \
+		\( -name "PKGBUILD" -o -name "*.install" -o -name "*.sh" \) \
 		-exec shfmt -w -i 4 -bn -ci {} \;
 
 # Web files formatting (HTML, JSON, Markdown)
@@ -56,12 +64,12 @@ lint-shell:
 # namcap keeps its '|| true': whole categories of its warnings are expected here
 # (RELRO/PIE on upstream prebuilts, ELF outside opt/, unused shared libs), so
 # failing on them would leave lint permanently red. See CLAUDE.md.
-	@find pkgbuilds -type f -name "PKGBUILD" -exec namcap {} \; || true
+	@find pkgbuilds $(BUILD_DIRS) -o -type f -name "PKGBUILD" -exec namcap {} \; || true
 # '-exec ... +' rather than '\;' is load-bearing, not a batching tweak: with '\;'
 # find returns 0 no matter how the command exited, so shellcheck failures would
 # be silently discarded and this lint could never fail.
-	@find pkgbuilds -type f -name "*.install" -exec shellcheck {} +
-	@find pkgbuilds -type f -name "*.sh" -exec shellcheck {} +
+	@find pkgbuilds $(BUILD_DIRS) -o -type f -name "*.install" -exec shellcheck {} +
+	@find pkgbuilds $(BUILD_DIRS) -o -type f -name "*.sh" -exec shellcheck {} +
 
 # JSON validation
 lint-json:

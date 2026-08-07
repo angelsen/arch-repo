@@ -9,8 +9,9 @@ import argparse
 import subprocess
 import shutil
 import re
+import hashlib
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 VERSION = "1.0.0"
 
@@ -54,18 +55,42 @@ class ApDev:
             cwd = self.repo_root
         return subprocess.run(cmd, cwd=cwd, **kwargs)
 
+    # makepkg's integrity arrays, mapped to the hashlib constructor for each.
+    # b2sums are BLAKE2b-512, which is hashlib.blake2b's default digest size.
+    SUM_ALGOS = {
+        "md5": "md5",
+        "sha1": "sha1",
+        "sha224": "sha224",
+        "sha256": "sha256",
+        "sha384": "sha384",
+        "sha512": "sha512",
+        "b2": "blake2b",
+    }
+
     @staticmethod
-    def local_source_files(sources: List[str]) -> List[str]:
-        """Source entries that ship in the package dir rather than being downloaded."""
+    def local_source_files(sources: List[str]) -> List[Tuple[int, str]]:
+        """Source entries shipped in the package dir, as (index, filename).
+
+        The index is kept so callers can line an entry up with its checksum in
+        the parallel sums array.
+        """
         local = []
-        for entry in sources:
+        for index, entry in enumerate(sources):
             # `filename::uri` renames a download, so the uri decides whether the
             # entry is remote; a bare entry with no protocol is a local file.
             uri = entry.split("::", 1)[-1]
             if re.match(r"^[a-z][a-z0-9+.-]*://", uri):
                 continue
-            local.append(uri)
+            local.append((index, uri))
         return local
+
+    @staticmethod
+    def file_digest(path: Path, algo: str) -> str:
+        digest = hashlib.new(algo)
+        with open(path, "rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+        return digest.hexdigest()
 
     def parse_pkgbuild(self, pkgbuild_path: Path) -> Optional[Dict]:
         """Extract package info from PKGBUILD"""
@@ -83,6 +108,16 @@ class ApDev:
                 printf '%s\\n' "${{source[@]}}"
                 echo "---INSTALL---"
                 echo "${{install}}"
+                echo "---SUMS---"
+                for algo in {" ".join(self.SUM_ALGOS)}; do
+                    ref="${{algo}}sums[@]"
+                    vals=("${{!ref}}")
+                    if [ "${{#vals[@]}}" -gt 0 ]; then
+                        echo "${{algo}}"
+                        printf '%s\\n' "${{vals[@]}}"
+                        break
+                    fi
+                done
             '''
             result = subprocess.run(
                 ["bash", "-c", cmd],
@@ -95,7 +130,14 @@ class ApDev:
                 return None
 
             meta, _, rest = result.stdout.partition("\n---SOURCE---\n")
-            sources_raw, _, install_raw = rest.partition("\n---INSTALL---\n")
+            sources_raw, _, rest = rest.partition("\n---INSTALL---\n")
+            install_raw, _, sums_raw = rest.partition("\n---SUMS---\n")
+
+            # First line of the sums section names the algorithm, the rest are
+            # the digests in source=() order.
+            sums_lines = [s for s in sums_raw.split("\n") if s]
+            sum_algo = sums_lines[0] if sums_lines else ""
+            sums = sums_lines[1:]
 
             parts = meta.strip().split("|")
             if len(parts) < 4:
@@ -120,6 +162,8 @@ class ApDev:
                 "files": files,
                 "sources": [s for s in sources_raw.split("\n") if s],
                 "install": install_raw.strip(),
+                "sum_algo": sum_algo,
+                "sums": sums,
             }
         except Exception as e:
             error(f"Failed to parse {pkgbuild_path}: {e}")
@@ -305,6 +349,52 @@ package() {{
 
         return 0
 
+    def verify_local_checksums(
+        self, pkg_dir: Path, pkg_info: Dict, local_sources: List[Tuple[int, str]]
+    ) -> int:
+        """Check the recorded digest of each in-tree source file.
+
+        Only local sources are hashed. A remote URL is pinned and cannot change
+        under us, while a file in the package dir silently desyncs the moment it
+        is edited or reformatted after updpkgsums last ran -- which is exactly
+        how a package can pass check, pass publish, and still fail to build.
+        Hashing local files is cheap; verifying remote ones would mean
+        re-downloading them on every check.
+        """
+        if not local_sources:
+            return 0
+
+        sums = pkg_info.get("sums", [])
+        algo = self.SUM_ALGOS.get(pkg_info.get("sum_algo", ""))
+        if not algo:
+            warning(f"{pkg_dir.name}: no recognized *sums array, skipping checksums")
+            return 0
+
+        sources = pkg_info.get("sources", [])
+        if len(sums) != len(sources):
+            error(
+                f"{pkg_dir.name}: {len(sources)} sources but {len(sums)} "
+                f"{pkg_info['sum_algo']}sums; makepkg will refuse this"
+            )
+            return 1
+
+        failures = 0
+        for index, name in local_sources:
+            expected = sums[index]
+            if expected.upper() == "SKIP":
+                continue
+            path = pkg_dir / name
+            if not path.exists():
+                continue  # already reported as missing by the caller
+            actual = self.file_digest(path, algo)
+            if actual != expected.lower():
+                error(
+                    f"{pkg_dir.name}: '{name}' does not match its recorded "
+                    f"{pkg_info['sum_algo']}sum; run 'ap-dev updpkgsums {pkg_info['name']}'"
+                )
+                failures += 1
+        return failures
+
     def cmd_check(self):
         """Validate all PKGBUILDs"""
         info("Checking all packages...")
@@ -344,7 +434,8 @@ package() {{
             # download list from `git ls-files`. An untracked file builds fine
             # here and then breaks `ap install` for everyone else.
             tracked = set(pkg_info.get("files", []))
-            required = self.local_source_files(pkg_info.get("sources", []))
+            local_sources = self.local_source_files(pkg_info.get("sources", []))
+            required = [name for _, name in local_sources]
             if pkg_info.get("install"):
                 required.append(pkg_info["install"])
 
@@ -361,6 +452,8 @@ package() {{
                         f"{pkg_dir.name}: '{name}' is used by the PKGBUILD but missing"
                     )
                 pkg_errors += 1
+
+            pkg_errors += self.verify_local_checksums(pkg_dir, pkg_info, local_sources)
 
             errors += pkg_errors
             if pkg_errors == 0:
