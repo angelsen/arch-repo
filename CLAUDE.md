@@ -10,6 +10,8 @@ All packages use the `-angelsen` suffix (e.g. `google-chrome-stable-angelsen`) a
 
 ## Common Commands
 
+Commands below are shown in `bash` for portability, but when dispatching them into one of the user's interactive terminal panes (e.g. via termtap2), check the pane's shell first — it's commonly `fish`, whose loop/conditional syntax (`for x in ...; ...; end`) differs from bash's (`do...done`).
+
 ### Package Management (ap-dev)
 
 ```bash

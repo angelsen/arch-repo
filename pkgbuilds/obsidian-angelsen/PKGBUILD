@@ -1,8 +1,8 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=obsidian-angelsen
-pkgver=1.12.7
-pkgrel=2
+pkgver=1.13.7
+pkgrel=1
 pkgdesc="A powerful knowledge base that works on top of a local folder of plain text Markdown files"
 arch=('x86_64')
 url="https://obsidian.md"
@@ -15,8 +15,8 @@ options=('!strip')
 install="${pkgname}.install"
 source=("https://github.com/obsidianmd/obsidian-releases/releases/download/v${pkgver}/obsidian_${pkgver}_amd64.deb"
     'obsidian-angelsen.sh')
-sha256sums=('3644e3ef19bcd23db4d17f7c73311b5245429391a2a48b361da93375f59712b0'
-    'a94e20705d4b67501f225d74f4460b746a258e52aa6bc522aed1e26ac42dbef9')
+sha256sums=('17dc33b49cb3e785ecc27edd2ea0c79e40207798b554fd2886e36ebee7af9ae0'
+            'a94e20705d4b67501f225d74f4460b746a258e52aa6bc522aed1e26ac42dbef9')
 
 package() {
     bsdtar -xf data.tar.xz -C "${pkgdir}/"
