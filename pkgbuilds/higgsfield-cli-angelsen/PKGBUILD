@@ -2,7 +2,7 @@
 
 pkgname=higgsfield-cli-angelsen
 _pkgname=hf
-pkgver=1.1.23
+pkgver=1.1.24
 pkgrel=1
 pkgdesc="Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models"
 arch=('x86_64')
@@ -12,7 +12,7 @@ provides=('higgsfield-cli' 'higgsfield')
 conflicts=('higgsfield-cli' 'higgsfield')
 source=("${_pkgname}_${pkgver}_linux_amd64.tar.gz::https://github.com/higgsfield-ai/cli/releases/download/v${pkgver}/${_pkgname}_${pkgver}_linux_amd64.tar.gz"
     "LICENSE::https://raw.githubusercontent.com/higgsfield-ai/cli/v${pkgver}/LICENSE")
-sha256sums=('c83cb1c03d2d760b43c412a1dea5ea5eea90f8fcd25c0fedd066b67d58ec2114'
+sha256sums=('626ce7fbfec2df737ec1e5a8643431479fa0d2d2376d6a52b7d7467051754862'
             '9da656d6226936542be59478dbf775057dfdeade2629d35e0832108c2b7aecc0')
 
 package() {
