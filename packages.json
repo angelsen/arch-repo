@@ -2,7 +2,7 @@
   "packages": [
     {
       "name": "bambu-studio-angelsen",
-      "version": "02.07.01.62-3",
+      "version": "02.08.02.61-1",
       "description": "Cutting-edge slicing software for BambuLab 3D printers",
       "url": "https://github.com/bambulab/BambuStudio",
       "files": [
@@ -14,7 +14,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.270-1",
+      "version": "2.1.296-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -30,7 +30,7 @@
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "153.0.8010.36-1",
+      "version": "155.0.8059.39-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -41,7 +41,7 @@
     },
     {
       "name": "higgsfield-cli-angelsen",
-      "version": "1.1.24-1",
+      "version": "1.1.26-1",
       "description": "Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models",
       "url": "https://github.com/higgsfield-ai/cli",
       "files": []
@@ -83,7 +83,7 @@
     },
     {
       "name": "obsidian-angelsen",
-      "version": "1.13.7-1",
+      "version": "1.14.4-1",
       "description": "A powerful knowledge base that works on top of a local folder of plain text Markdown files",
       "url": "https://obsidian.md",
       "files": [
@@ -123,11 +123,11 @@
     },
     {
       "name": "shopify-cli-angelsen",
-      "version": "3.93.2-1",
+      "version": "4.9.3-1",
       "description": "A CLI tool to build for the Shopify platform",
       "url": "https://github.com/Shopify/cli",
       "files": [
-        "LICENSE-3.93.2"
+        "LICENSE-4.9.3"
       ]
     },
     {
