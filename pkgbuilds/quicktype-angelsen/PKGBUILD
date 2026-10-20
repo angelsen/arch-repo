@@ -2,19 +2,19 @@
 
 pkgname=quicktype-angelsen
 _pkgname=quicktype
-pkgver=23.2.6
-pkgrel=3
+pkgver=26.0.0
+pkgrel=1
 pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
 arch=('any')
 url="https://github.com/glideapps/quicktype"
 license=('Apache-2.0')
-depends=('nodejs>=18')
+depends=('nodejs>=20.19.0')
 makedepends=('npm' 'jq')
 provides=('quicktype')
 conflicts=('quicktype')
 source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('a8cf7412ccc3ce1c04b1083cced2c47b0b7b043b77fc56cbef5c151aff2c9daa')
+sha256sums=('55de624945e4f04fcc6d64c3ed6fcf2d1d6accd958e13c028deed8118b310c16')
 
 package() {
     # Create temporary npm cache directory

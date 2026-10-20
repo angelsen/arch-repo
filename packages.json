@@ -14,7 +14,7 @@
     },
     {
       "name": "claude-code-angelsen",
-      "version": "2.1.296-1",
+      "version": "2.1.305-1",
       "description": "An agentic coding tool by Anthropic that lives in your terminal",
       "url": "https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview",
       "files": [
@@ -23,14 +23,14 @@
     },
     {
       "name": "forge-cli-angelsen",
-      "version": "12.18.0-1",
+      "version": "14.2.0-1",
       "description": "A command line interface for managing Atlassian-hosted apps",
       "url": "https://developer.atlassian.com/platform/forge",
       "files": []
     },
     {
       "name": "google-chrome-stable-angelsen",
-      "version": "155.0.8059.39-1",
+      "version": "156.0.8078.47-1",
       "description": "Web browser from Google (Stable Channel)",
       "url": "https://www.google.com/chrome",
       "files": [
@@ -41,7 +41,7 @@
     },
     {
       "name": "higgsfield-cli-angelsen",
-      "version": "1.1.26-1",
+      "version": "1.2.2-1",
       "description": "Generate images, videos, 3D assets, and audio from the terminal using 40+ Higgsfield AI models",
       "url": "https://github.com/higgsfield-ai/cli",
       "files": []
@@ -100,21 +100,21 @@
     },
     {
       "name": "orval-angelsen",
-      "version": "7.13.2-3",
+      "version": "8.43.0-1",
       "description": "A swagger client generator for typescript",
       "url": "https://github.com/anymaniax/orval",
       "files": []
     },
     {
       "name": "quicktype-angelsen",
-      "version": "23.2.6-3",
+      "version": "26.0.0-1",
       "description": "Generate types and converters from JSON, Schema, and GraphQL",
       "url": "https://github.com/glideapps/quicktype",
       "files": []
     },
     {
       "name": "rustdesk-bin-angelsen",
-      "version": "1.4.4-2",
+      "version": "1.5.0-1",
       "description": "Remote desktop software, the open source TeamViewer alternative",
       "url": "https://rustdesk.com",
       "files": [
@@ -123,16 +123,16 @@
     },
     {
       "name": "shopify-cli-angelsen",
-      "version": "4.9.3-1",
+      "version": "4.9.4-1",
       "description": "A CLI tool to build for the Shopify platform",
       "url": "https://github.com/Shopify/cli",
       "files": [
-        "LICENSE-4.9.3"
+        "LICENSE-4.9.4"
       ]
     },
     {
       "name": "teamviewer-angelsen",
-      "version": "15.78.3-1",
+      "version": "15.82.6-1",
       "description": "All-in-one software for remote support, remote access, and online meetings",
       "url": "https://www.teamviewer.com",
       "files": [

@@ -1,7 +1,7 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=teamviewer-angelsen
-pkgver=15.78.3
+pkgver=15.82.6
 pkgrel=1
 pkgdesc="All-in-one software for remote support, remote access, and online meetings"
 arch=('x86_64')
@@ -35,7 +35,7 @@ optdepends=(
 options=('!strip')
 install="${pkgname}.install"
 source=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
-sha256sums=('c2b98b22bf2a34bbdf5b930c8fa7da17fba195d83d0e3f9e0e695c9043aa9e6a')
+sha256sums=('7b84954b288ea915dc44e9d0506aeb70c62a16c1b7b919cd185ab11c5f334512')
 
 package() {
     # Extract the data from the deb package
