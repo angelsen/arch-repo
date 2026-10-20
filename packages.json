@@ -100,7 +100,7 @@
     },
     {
       "name": "orval-angelsen",
-      "version": "8.43.0-1",
+      "version": "8.43.0-2",
       "description": "A swagger client generator for typescript",
       "url": "https://github.com/anymaniax/orval",
       "files": []
@@ -114,7 +114,7 @@
     },
     {
       "name": "rustdesk-bin-angelsen",
-      "version": "1.5.0-1",
+      "version": "1.5.0-2",
       "description": "Remote desktop software, the open source TeamViewer alternative",
       "url": "https://rustdesk.com",
       "files": [
@@ -123,16 +123,14 @@
     },
     {
       "name": "shopify-cli-angelsen",
-      "version": "4.9.4-1",
+      "version": "4.9.4-2",
       "description": "A CLI tool to build for the Shopify platform",
       "url": "https://github.com/Shopify/cli",
-      "files": [
-        "LICENSE-4.9.4"
-      ]
+      "files": []
     },
     {
       "name": "teamviewer-angelsen",
-      "version": "15.82.6-1",
+      "version": "15.82.6-2",
       "description": "All-in-one software for remote support, remote access, and online meetings",
       "url": "https://www.teamviewer.com",
       "files": [

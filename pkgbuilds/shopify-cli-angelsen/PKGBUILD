@@ -4,12 +4,12 @@ pkgname=shopify-cli-angelsen
 _npmname=@shopify/cli
 _pkgname=cli
 pkgver=4.9.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A CLI tool to build for the Shopify platform"
 arch=('x86_64')
 url="https://github.com/Shopify/cli"
 license=('MIT')
-depends=('nodejs>=18')
+depends=('nodejs>=22.12.0' 'libx11')
 makedepends=('npm' 'jq')
 provides=('shopify-cli')
 conflicts=('shopify-cli')

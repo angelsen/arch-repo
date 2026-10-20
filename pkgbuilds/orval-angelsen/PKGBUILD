@@ -3,18 +3,20 @@
 pkgname=orval-angelsen
 _pkgname=orval
 pkgver=8.43.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A swagger client generator for typescript"
-arch=('any')
+arch=('x86_64')
 url="https://github.com/anymaniax/orval"
 license=('MIT')
 depends=('nodejs>=22.18.0')
 makedepends=('npm' 'jq')
 provides=('orval')
 conflicts=('orval' 'nodejs-orval')
-source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz")
+source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz"
+    "LICENSE-${pkgver}::https://raw.githubusercontent.com/orval-labs/orval/v${pkgver}/LICENSE")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('7cc01a76dbd88dbed553e098329c7bd6e87e0c0dd2ea0fdc4b1602ed6da731f2')
+sha256sums=('7cc01a76dbd88dbed553e098329c7bd6e87e0c0dd2ea0fdc4b1602ed6da731f2'
+            'a8e153aafa1d73e70356ffaed4b1699a324c022b4ac4be9c3bdc385c96d52a20')
 
 package() {
     # Create temporary npm cache directory
@@ -59,10 +61,7 @@ package() {
         chmod 755 "${pkgdir}/usr/bin/orval"
     fi
 
-    # Install license file if it exists (orval doesn't include one in npm package)
-    # The package.json shows MIT license
-    if [[ -f "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" ]]; then
-        install -Dm644 "${pkgdir}/usr/lib/node_modules/${_pkgname}/LICENSE" \
-            "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    fi
+    # The npm tarball ships no LICENSE, so it's sourced from the GitHub tag.
+    install -Dm644 "${srcdir}/LICENSE-${pkgver}" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

@@ -2,11 +2,11 @@
 
 pkgname=teamviewer-angelsen
 pkgver=15.82.6
-pkgrel=1
+pkgrel=2
 pkgdesc="All-in-one software for remote support, remote access, and online meetings"
 arch=('x86_64')
 url="https://www.teamviewer.com"
-license=('custom')
+license=('LicenseRef-TeamViewer-EULA')
 provides=('teamviewer')
 conflicts=('teamviewer' 'teamviewer-beta' 'teamviewer13' 'teamviewer-quicksupport')
 depends=(
@@ -34,8 +34,11 @@ optdepends=(
 )
 options=('!strip')
 install="${pkgname}.install"
-source=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb")
-sha256sums=('7b84954b288ea915dc44e9d0506aeb70c62a16c1b7b919cd185ab11c5f334512')
+source=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb"
+    "teamviewer-eula-${pkgver}.pdf::https://media.teamviewer.com/is/content/teamviewergmbh/teamviewer/central-image-hub/pdf/en/teamviewer-eula-en.pdf")
+# The EULA URL is unversioned and gets revised in place, so its checksum is skipped.
+sha256sums=('7b84954b288ea915dc44e9d0506aeb70c62a16c1b7b919cd185ab11c5f334512'
+            'SKIP')
 
 package() {
     # Extract the data from the deb package
@@ -47,4 +50,7 @@ package() {
     # Install the systemd service (vendor ships it under tv_bin/script/)
     install -Dm644 "$pkgdir"/opt/teamviewer/tv_bin/script/teamviewerd.service \
         "$pkgdir"/usr/lib/systemd/system/teamviewerd.service
+
+    install -Dm644 "${srcdir}/teamviewer-eula-${pkgver}.pdf" \
+        "$pkgdir/usr/share/licenses/${pkgname}/EULA.pdf"
 }

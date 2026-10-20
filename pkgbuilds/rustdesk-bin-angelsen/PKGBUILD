@@ -3,12 +3,12 @@
 pkgname=rustdesk-bin-angelsen
 _pkgname=rustdesk
 pkgver=1.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Remote desktop software, the open source TeamViewer alternative"
 arch=('x86_64')
 url="https://rustdesk.com"
-license=('AGPL-3.0')
-depends=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicator' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire')
+license=('AGPL-3.0-only')
+depends=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libpulse' 'libva' 'libappindicator' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire')
 provides=('rustdesk')
 conflicts=('rustdesk' 'rustdesk-bin')
 install=${pkgname}.install

@@ -42,3 +42,7 @@ pkgbuilds/**/.SRCINFO
 !pkgbuilds/**/*.html
 !pkgbuilds/**/*.desktop
 !pkgbuilds/**/*.service
+
+# Downloaded license/EULA sources (fetched by makepkg from their URLs)
+pkgbuilds/**/LICENSE-*
+pkgbuilds/**/*.pdf
