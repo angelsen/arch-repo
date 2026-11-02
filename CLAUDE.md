@@ -23,6 +23,7 @@ Commands below are shown in `bash` for portability, but when dispatching them in
 ./ap-dev update                     # Regenerate packages.json + .SRCINFO from PKGBUILDs
 ./ap-dev clean                      # Remove build artifacts
 ./ap-dev list                       # List all packages with versions
+./ap-dev outdated                   # Compare each pkgver with the latest upstream release
 ```
 
 `publish` calls `update` internally — no need to run `update` separately before publishing.

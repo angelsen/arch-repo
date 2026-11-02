@@ -1,8 +1,8 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=teamviewer-angelsen
-pkgver=15.82.6
-pkgrel=2
+pkgver=15.83.3
+pkgrel=1
 pkgdesc="All-in-one software for remote support, remote access, and online meetings"
 arch=('x86_64')
 url="https://www.teamviewer.com"
@@ -37,7 +37,7 @@ install="${pkgname}.install"
 source=("https://dl.teamviewer.com/download/linux/version_${pkgver%%.*}x/teamviewer_${pkgver}_amd64.deb"
     "teamviewer-eula-${pkgver}.pdf::https://media.teamviewer.com/is/content/teamviewergmbh/teamviewer/central-image-hub/pdf/en/teamviewer-eula-en.pdf")
 # The EULA URL is unversioned and gets revised in place, so its checksum is skipped.
-sha256sums=('7b84954b288ea915dc44e9d0506aeb70c62a16c1b7b919cd185ab11c5f334512'
+sha256sums=('f3130d24edbe259ef5ba46a543c6d5a823aea2a14f533834f2e484bfdca68909'
             'SKIP')
 
 package() {
