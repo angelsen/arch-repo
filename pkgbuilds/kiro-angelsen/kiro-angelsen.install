@@ -1,5 +1,10 @@
 # shellcheck shell=bash
 post_install() {
+    # Setuid chrome-sandbox only when unprivileged user namespaces are unavailable.
+    if ! { [[ -L /proc/self/ns/user ]] && unshare --user true 2>/dev/null; }; then
+        chmod 4755 '/opt/kiro/chrome-sandbox' || true
+    fi
+
     cat <<EOF
 
 ==> Kiro IDE has been installed to /opt/kiro

@@ -3,19 +3,19 @@
 pkgname=forge-cli-angelsen
 _npmname=@forge/cli
 _pkgname=cli
-pkgver=14.2.0
+pkgver=15.0.0
 pkgrel=1
 pkgdesc="A command line interface for managing Atlassian-hosted apps"
 arch=('x86_64')
 url="https://developer.atlassian.com/platform/forge"
 license=('LicenseRef-Atlassian')
-depends=('nodejs>=20.18.1' 'libsecret')
+depends=('nodejs>=22.23.4' 'libsecret')
 makedepends=('npm' 'jq')
 provides=('forge-cli')
 conflicts=('forge-cli')
 source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('510f2caa57d4598d8a2804dd2a3dec91eef8df85fdaf284ea74991ab39fca8d2')
+sha256sums=('4fe1bf09c7603554f013893c449b611f576147bd2426080f4f7feb653da4e692')
 
 package() {
     local npm_cache="${srcdir}/npm-cache"

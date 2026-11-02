@@ -1,7 +1,7 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=opencode-angelsen
-pkgver=1.1.23
+pkgver=1.19.5
 pkgrel=1
 provides=('opencode')
 conflicts=('opencode')
@@ -15,9 +15,12 @@ optdepends=(
     'git: For git operations'
     'github-cli: For GitHub workflows'
 )
-source=("opencode-${pkgver}.tar.gz::https://github.com/anomalyco/opencode/releases/download/v${pkgver}/opencode-linux-x64.tar.gz")
-sha256sums=('2e31e4fa878c7c062843efa312bd94edcc6c79d98f3b0ac9b0db92a97740104b')
+source=("opencode-${pkgver}.tar.gz::https://github.com/anomalyco/opencode/releases/download/v${pkgver}/opencode-linux-x64.tar.gz"
+    "LICENSE-${pkgver}::https://raw.githubusercontent.com/anomalyco/opencode/v${pkgver}/LICENSE")
+sha256sums=('588310a336fa3b9df36b3f0225b26f679d453efaad0cf3d66c3651ef3ec1647a'
+            '625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b')
 
 package() {
     install -Dm755 "${srcdir}/opencode" "${pkgdir}/usr/bin/opencode"
+    install -Dm644 "${srcdir}/LICENSE-${pkgver}" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
