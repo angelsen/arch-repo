@@ -3,7 +3,7 @@
 pkgname=shopify-cli-angelsen
 _npmname=@shopify/cli
 _pkgname=cli
-pkgver=5.0.0
+pkgver=5.0.1
 pkgrel=1
 pkgdesc="A CLI tool to build for the Shopify platform"
 arch=('x86_64')
@@ -16,7 +16,7 @@ conflicts=('shopify-cli')
 source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz"
     "LICENSE-${pkgver}::https://raw.githubusercontent.com/Shopify/cli/main/LICENSE")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('be3f91be0f8a3cf11fd36f78cebe0b603995b9fa2609263848121cb662ff3899'
+sha256sums=('3ba23fc570a183a46ea3d5ee7115f2bfe6d621146ee63c9f444f7e6e620fd77c'
             '40614f57726c0804b64757fcf155ebfb59c9dddfc27cc17c7717e2993571c771')
 
 package() {

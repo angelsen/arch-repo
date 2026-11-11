@@ -1,7 +1,7 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=obsidian-angelsen
-pkgver=1.14.5
+pkgver=1.15.0
 pkgrel=1
 pkgdesc="A powerful knowledge base that works on top of a local folder of plain text Markdown files"
 arch=('x86_64')
@@ -15,7 +15,7 @@ options=('!strip')
 install="${pkgname}.install"
 source=("https://github.com/obsidianmd/obsidian-releases/releases/download/v${pkgver}/obsidian_${pkgver}_amd64.deb"
     'obsidian-angelsen.sh')
-sha256sums=('c37fb46a966f604823337fb36ab23bd1baf8ce912ec35af59d62358a93357bee'
+sha256sums=('251805fdcb696af32129e8f5e8656f6688802fc38b169822175d23a74c5174b3'
             'a94e20705d4b67501f225d74f4460b746a258e52aa6bc522aed1e26ac42dbef9')
 
 package() {

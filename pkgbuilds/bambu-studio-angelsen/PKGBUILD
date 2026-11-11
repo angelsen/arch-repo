@@ -1,8 +1,8 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=bambu-studio-angelsen
-pkgver=02.08.02.61
-_buildstamp=20260820225108
+pkgver=02.09.01.70
+_buildstamp=20261103183404
 pkgrel=1
 pkgdesc="Cutting-edge slicing software for BambuLab 3D printers"
 arch=('x86_64')
@@ -29,12 +29,12 @@ optdepends=('curl: fetch the network plugin via bambu-studio-install-network-plu
     'jq: fetch the network plugin via bambu-studio-install-network-plugin')
 options=('!strip' '!debug')
 install="${pkgname}.install"
-source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudio/releases/download/v${pkgver}/BambuStudio_ubuntu24.04-v${pkgver}-${_buildstamp}.AppImage"
+source=("bambu-studio-${pkgver}.AppImage::https://github.com/bambulab/BambuStudio/releases/download/v${pkgver}/BambuStudio_ubu24-v${pkgver}-${_buildstamp}.AppImage"
     'bambu-studio.sh'
     'bambu-studio.desktop'
     'bambu-studio-install-network-plugin.sh')
 noextract=("bambu-studio-${pkgver}.AppImage")
-sha256sums=('d501b103fac5424513ec0e8d6bc145fb30719de2c7d94d7320d723740c81a7fd'
+sha256sums=('668dabb1be53c758189ed6bc89935285dea5e0af46216546b1bafd6882e9aff0'
             'cda2ab6c6b7820cad38c94f974b9c9415d0b22f069de9f45a55030cf7a3a95df'
             '1e3164fab4d0e4cf600e762176fbc740cedd33e0d2cd2c92091b47fdb78ded3c'
             '2a878556c47bfdb89ba85381c12fb6b126838ca86e9029caef204346db7a473c')

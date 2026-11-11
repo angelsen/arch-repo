@@ -2,7 +2,7 @@
 
 pkgname=orval-angelsen
 _pkgname=orval
-pkgver=8.46.0
+pkgver=8.47.0
 pkgrel=1
 pkgdesc="A swagger client generator for typescript"
 arch=('x86_64')
@@ -15,7 +15,7 @@ conflicts=('orval' 'nodejs-orval')
 source=("https://registry.npmjs.org/${_pkgname}/-/${_pkgname}-${pkgver}.tgz"
     "LICENSE-${pkgver}::https://raw.githubusercontent.com/orval-labs/orval/v${pkgver}/LICENSE")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('1a02600bf2cdfc61aded8ae0aaa4e780981da922bb6c739af331175de14d4200'
+sha256sums=('e91b0b29a0b1dc356cc2e2ee056d62421162ead354a0490a1e0b78faba37c8f2'
             'a8e153aafa1d73e70356ffaed4b1699a324c022b4ac4be9c3bdc385c96d52a20')
 
 package() {
