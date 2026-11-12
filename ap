@@ -37,12 +37,14 @@ install() {
     echo -e "${BLUE}→${NC} Downloading package files..."
 
     # Get file list from packages.json (required)
-    files=$(curl -s "$REPO/packages.json" 2>/dev/null | jq -r ".packages[] | select(.name == \"$package\") | .files[]?" 2>/dev/null)
+    index=$(curl -s "$REPO/packages.json" 2>/dev/null)
 
-    if [[ -z "$files" ]]; then
-        echo -e "${RED}Error:${NC} Package files not found in packages.json. Repository may need updating."
+    # `files` is legitimately empty for PKGBUILD-only packages, so check the entry exists instead.
+    if ! jq -e --arg p "$package" '.packages[] | select(.name == $p)' <<<"$index" >/dev/null 2>&1; then
+        echo -e "${RED}Error:${NC} Package not found in packages.json. Repository may need updating."
         exit 1
     fi
+    files=$(jq -r --arg p "$package" '.packages[] | select(.name == $p) | .files[]?' <<<"$index")
 
     # Download each file
     for file in $files; do
