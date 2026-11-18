@@ -1,7 +1,7 @@
 # Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
 
 pkgname=opencode-angelsen
-pkgver=1.19.5
+pkgver=1.19.6
 pkgrel=1
 provides=('opencode')
 conflicts=('opencode')
@@ -17,7 +17,7 @@ optdepends=(
 )
 source=("opencode-${pkgver}.tar.gz::https://github.com/anomalyco/opencode/releases/download/v${pkgver}/opencode-linux-x64.tar.gz"
     "LICENSE-${pkgver}::https://raw.githubusercontent.com/anomalyco/opencode/v${pkgver}/LICENSE")
-sha256sums=('588310a336fa3b9df36b3f0225b26f679d453efaad0cf3d66c3651ef3ec1647a'
+sha256sums=('47734e08968b30cc22a0bffb6d9feeed76ad4aa743213a12122040392d09a057'
             '625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b')
 
 package() {

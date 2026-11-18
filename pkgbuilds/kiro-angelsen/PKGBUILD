@@ -2,7 +2,7 @@
 
 pkgname=kiro-angelsen
 epoch=1
-pkgver=1.4.154
+pkgver=1.4.215
 pkgrel=1
 pkgdesc="AI IDE for prototype to production by AWS"
 arch=('x86_64')
@@ -16,7 +16,7 @@ conflicts=('kiro')
 options=('!strip' '!emptydirs')
 install="${pkgname}.install"
 source=("kiro-ide-${pkgver}-stable-linux-x64.deb::https://prod.download.desktop.kiro.dev/releases/stable/linux-x64/signed/${pkgver}/deb/kiro-ide-${pkgver}-stable-linux-x64.deb")
-sha512sums=('66a0aed4d8a1ff9dd57831495afd429580670e85a91a048be341f50e86ab1cbb1d980871dfd2d927b7e5a534843292af21e6b63bbe4307a3886519c69ba6c1f9')
+sha512sums=('fb7675f7d53e82173e1f41a013db28ac5b1360c0bb269a83de855d01484e11499ec5675201a858ff83d83fb3a5ead7214b415426b94b79ab6b3c00ff23cb5e5d')
 
 package() {
     # Extract the data from the deb package
@@ -25,6 +25,9 @@ package() {
     # Move from /usr/share/kiro to /opt/kiro
     install -dm755 "$pkgdir/opt"
     mv "$pkgdir/usr/share/kiro" "$pkgdir/opt/kiro"
+
+    # The deb ships some files 0666/0775; world-writable files under /opt are a local privesc vector
+    chmod -R o-w,g-w "$pkgdir/opt/kiro"
 
     # Create symlink for the binary
     install -dm755 "$pkgdir/usr/bin"
