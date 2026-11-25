@@ -2,7 +2,7 @@
 
 pkgname=kiro-angelsen
 epoch=1
-pkgver=1.4.215
+pkgver=1.5.37
 pkgrel=1
 pkgdesc="AI IDE for prototype to production by AWS"
 arch=('x86_64')
@@ -16,7 +16,7 @@ conflicts=('kiro')
 options=('!strip' '!emptydirs')
 install="${pkgname}.install"
 source=("kiro-ide-${pkgver}-stable-linux-x64.deb::https://prod.download.desktop.kiro.dev/releases/stable/linux-x64/signed/${pkgver}/deb/kiro-ide-${pkgver}-stable-linux-x64.deb")
-sha512sums=('fb7675f7d53e82173e1f41a013db28ac5b1360c0bb269a83de855d01484e11499ec5675201a858ff83d83fb3a5ead7214b415426b94b79ab6b3c00ff23cb5e5d')
+sha512sums=('2dd14dc277568ef797df84c3d3e8559c30ac41c6649802ca598ceb1df025ef0a4b93713edeb4821a2bdb1f58809c380f063e0e232a5b134495049a55f404bb07')
 
 package() {
     # Extract the data from the deb package

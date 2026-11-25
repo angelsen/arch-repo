@@ -3,19 +3,19 @@
 pkgname=forge-cli-angelsen
 _npmname=@forge/cli
 _pkgname=cli
-pkgver=15.1.0
+pkgver=16.0.0
 pkgrel=1
 pkgdesc="A command line interface for managing Atlassian-hosted apps"
 arch=('x86_64')
 url="https://developer.atlassian.com/platform/forge"
 license=('LicenseRef-Atlassian')
-depends=('nodejs>=22.23.4' 'libsecret')
+depends=('nodejs>=22.23.4')
 makedepends=('npm' 'jq')
 provides=('forge-cli')
 conflicts=('forge-cli')
 source=("https://registry.npmjs.org/${_npmname}/-/${_pkgname}-${pkgver}.tgz")
 noextract=("${_pkgname}-${pkgver}.tgz")
-sha256sums=('1be4dca3f77fd641777f967d4fb024ebf1212c6e9713c1f8f30be23e45d1355e')
+sha256sums=('52b797e65208195af28778cd4e4967274b81f8973d9bbd47d04700046993be34')
 
 package() {
     local npm_cache="${srcdir}/npm-cache"
@@ -46,7 +46,7 @@ package() {
         chmod 644 "${pkgjson}"
     done
 
-    # Fix ownership (keytar prebuild has wrong owner)
+    # Some npm tarballs carry non-root ownership
     chown -R root:root "${pkgdir}"
 
     # Fix npm's permissions
