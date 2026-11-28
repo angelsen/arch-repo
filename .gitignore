@@ -17,6 +17,7 @@ pkgbuilds/**/src/
 pkgbuilds/**/*.deb
 pkgbuilds/**/*.tar.gz
 pkgbuilds/**/*.tar.xz
+pkgbuilds/**/*.tar.zst
 pkgbuilds/**/*.tar.bz2
 pkgbuilds/**/*.tgz
 pkgbuilds/**/*.zip

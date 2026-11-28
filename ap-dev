@@ -87,14 +87,26 @@ def kiro_latest() -> str:
     return http_json(url)["currentRelease"]
 
 
+def codex_latest() -> str:
+    rel = http_json("https://api.github.com/repos/openai/codex/releases/latest")
+    return rel["tag_name"].removeprefix("rust-v")
+
+
+def antigravity_cli_latest() -> str:
+    url = "https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_amd64.json"
+    return http_json(url)["version"]
+
+
 def claude_code_latest() -> str:
     return http_get("https://downloads.claude.ai/claude-code-releases/latest").strip()
 
 
 # Keyed by pkgbuilds/ directory name. Values are the upstream version in pkgver form.
 UPSTREAM = {
+    "antigravity-cli-angelsen": antigravity_cli_latest,
     "bambu-studio-angelsen": github_latest("bambulab/BambuStudio"),
     "claude-code-angelsen": claude_code_latest,
+    "codex-angelsen": codex_latest,
     "forge-cli-angelsen": npm_latest("@forge/cli"),
     "google-chrome-stable-angelsen": chrome_latest,
     "higgsfield-cli-angelsen": github_latest("higgsfield-ai/cli"),

@@ -1,6 +1,16 @@
 {
   "packages": [
     {
+      "name": "antigravity-cli-angelsen",
+      "version": "1.5.19-1",
+      "description": "Google's Antigravity terminal coding agent",
+      "url": "https://antigravity.google/product/antigravity-cli",
+      "files": [
+        "TERMS",
+        "antigravity-cli-angelsen.sh"
+      ]
+    },
+    {
       "name": "bambu-studio-angelsen",
       "version": "02.09.02.62-1",
       "description": "Cutting-edge slicing software for BambuLab 3D printers",
@@ -20,6 +30,13 @@
       "files": [
         "claude-code-angelsen.install"
       ]
+    },
+    {
+      "name": "codex-angelsen",
+      "version": "0.172.0-1",
+      "description": "OpenAI's coding agent that runs in your terminal",
+      "url": "https://github.com/openai/codex",
+      "files": []
     },
     {
       "name": "forge-cli-angelsen",
@@ -48,7 +65,7 @@
     },
     {
       "name": "kiro-angelsen",
-      "version": "1.5.37-1",
+      "version": "1.5.49-1",
       "description": "AI IDE for prototype to production by AWS",
       "url": "https://kiro.aws",
       "files": [

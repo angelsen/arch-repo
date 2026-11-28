@@ -1,0 +1,50 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=codex-angelsen
+pkgver=0.172.0
+pkgrel=1
+provides=('openai-codex')
+conflicts=('openai-codex' 'openai-codex-bin')
+pkgdesc="OpenAI's coding agent that runs in your terminal"
+arch=('x86_64')
+url="https://github.com/openai/codex"
+license=('Apache-2.0')
+# The voice helper's bundled manifest verifies file hashes.
+options=('!strip' '!debug')
+depends=('glibc')
+optdepends=(
+    'git: For git operations'
+    'github-cli: For PR workflows with GitHub'
+    'alsa-lib: For voice mode'
+    'pipewire-alsa: For voice mode through PipeWire'
+)
+_release="https://github.com/openai/codex/releases/download/rust-v${pkgver}"
+_raw="https://raw.githubusercontent.com/openai/codex/rust-v${pkgver}"
+source=("codex-${pkgver}.tar.zst::${_release}/codex-package-${CARCH}-unknown-linux-musl.tar.zst"
+    "LICENSE-${pkgver}::${_raw}/LICENSE"
+    "LICENSE-NOTICE-${pkgver}::${_raw}/NOTICE")
+sha256sums=('40e15ab97830b71a642a4b7328ca4c301bf0b5e0faafe68aaa6e1a94b04ff15f'
+            'd17f227e4df5da1600391338865ce0f3055211760a36688f816941d58232d8dc'
+            '9d71575ecfd9a843fc1677b0efb08053c6ba9fd686a0de1a6f5382fd3c220915')
+
+package() {
+    cd "${srcdir}"
+
+    # codex finds its helpers relative to codex-package.json, so the bundle stays whole.
+    install -d "${pkgdir}/opt/codex" "${pkgdir}/usr/bin"
+    cp -a --no-preserve=ownership bin codex-package.json codex-path codex-resources "${pkgdir}/opt/codex/"
+    ln -s /opt/codex/bin/codex "${pkgdir}/usr/bin/codex"
+
+    install -d "${pkgdir}/usr/share/bash-completion/completions" \
+        "${pkgdir}/usr/share/zsh/site-functions" \
+        "${pkgdir}/usr/share/fish/vendor_completions.d"
+    # CODEX_HOME keeps the build from touching the user's ~/.codex.
+    export CODEX_HOME="${srcdir}/codex-home"
+    mkdir -p "${CODEX_HOME}"
+    bin/codex completion bash >"${pkgdir}/usr/share/bash-completion/completions/codex"
+    bin/codex completion zsh >"${pkgdir}/usr/share/zsh/site-functions/_codex"
+    bin/codex completion fish >"${pkgdir}/usr/share/fish/vendor_completions.d/codex.fish"
+
+    install -Dm644 "LICENSE-${pkgver}" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 "LICENSE-NOTICE-${pkgver}" "${pkgdir}/usr/share/licenses/${pkgname}/NOTICE"
+}

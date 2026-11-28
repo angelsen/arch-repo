@@ -1,0 +1,32 @@
+# Maintainer: Fredrik Angelsen <fredrikangelsen@gmail.com>
+
+pkgname=antigravity-cli-angelsen
+pkgver=1.5.19
+# Changes with every release; both come from the manifest at
+# https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests/linux_amd64.json
+_build=4821414830800896
+pkgrel=1
+provides=('antigravity-cli' 'agy')
+conflicts=('antigravity-cli' 'agy')
+pkgdesc="Google's Antigravity terminal coding agent"
+arch=('x86_64')
+url="https://antigravity.google/product/antigravity-cli"
+license=('LicenseRef-Google')
+options=('!strip' '!debug')
+depends=('glibc')
+optdepends=(
+    'git: For git operations'
+    'bubblewrap: For the terminal sandbox'
+)
+source=("agy-${pkgver}.tar.gz::https://storage.googleapis.com/antigravity-public/antigravity-cli/${pkgver}-${_build}/linux-x64/cli_linux_x64.tar.gz"
+    "${pkgname}.sh"
+    "TERMS")
+sha256sums=('971a4aa707fb0886d4e1df5f1f50bad7b01aa492d0b1f13df4ea7402e96dae90'
+            'aa7f468113dbd5174faa2ab65fcffe0df0f1503156aa5e8b3ec98db805c3b539'
+            'ffb72aecece4b64d93159170d97520c5fb3f1df24703e937a271ee323b16e5d7')
+
+package() {
+    install -Dm755 "${srcdir}/antigravity" "${pkgdir}/opt/antigravity-cli/agy"
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/agy"
+    install -Dm644 "${srcdir}/TERMS" "${pkgdir}/usr/share/licenses/${pkgname}/TERMS"
+}
